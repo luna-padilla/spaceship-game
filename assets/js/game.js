@@ -4,6 +4,7 @@ class Game {
       this.ship = new Ship(ctx);
       this.background = new Background(ctx);
       this.explosion = new Explosion(ctx);
+      this.shoot = new Shoot(ctx);
   
       this.enemy = [new Enemy(ctx)];
   
@@ -62,6 +63,7 @@ class Game {
     draw() {
       this.background.draw();
       this.ship.draw();
+      this.shoot.draw();
       this.enemy.forEach((enemy) => {
         enemy.draw();
       });

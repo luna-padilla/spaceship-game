@@ -49,7 +49,8 @@ class Game {
           this.ship.y < enemy.y + enemy.height &&
           this.ship.y + this.ship.height > enemy.y
         ) {
-          console.log(`Colisión detectada`);
+         this.explosion.draw(this.ship.x + this.ship.width, this.ship.y - this.ship.height +5);
+        
         }
       });
     }

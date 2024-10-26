@@ -1,14 +1,17 @@
 class Shoot {
-  constructor(ctx) {
+  constructor(ctx, x, y) {
     this.ctx = ctx;
-    this.x = 0;
-    this.y = 0;
+    this.x = x;
+    this.y = y;
     this.width = 483;
     this.height = 89;
+    this.speed = 5;
     this.spriteSheet = new Image();
     this.spriteSheet.src = "/assets/images/disparos.png";
   }
-
+  move() {
+    this.x += this.speed;
+  }
   draw(x, y) {
     // this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
     const spriteX = 210; // Coordenada X en la hoja de sprites
@@ -22,8 +25,17 @@ class Shoot {
       this.height, // Ancho y alto del sprite en la hoja
       this.x,
       this.y, // Coordenadas donde se dibujará el sprite en el canvas
-      this.width/5,
-      this.height/5 // Ancho y alto del sprite al dibujarlo
+      this.width / 5,
+      this.height / 5 // Ancho y alto del sprite al dibujarlo
     );
+  }
+
+  isOut() {
+    let fuera = false;
+    if (this.x + this.w < 0) {
+      fuera = true;
+      return fuera;
+    }
+    return fuera;
   }
 }

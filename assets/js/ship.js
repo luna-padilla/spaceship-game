@@ -1,7 +1,7 @@
 class Ship {
   constructor(ctx) {
     this.ctx = ctx;
-    this.x = 30;
+    this.x = 40;
     this.y = this.ctx.canvas.height / 2;
     this.vy = 0;
     this.vx = 0;
@@ -53,16 +53,16 @@ class Ship {
   onKeyDown(code) {
     switch (code) {
       case KEY_RIGHT:
-        this.vx = 1;
+        this.vx = 5;
         break;
       case KEY_UP:
-        this.vy = -1;
+        this.vy = -5;
         break;
       case KEY_LEFT:
-        this.vx = -1;
+        this.vx = -5;
         break;
       case KEY_DOWN:
-        this.vy = 1;
+        this.vy = 5;
         break;
     }
   }

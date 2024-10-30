@@ -71,7 +71,7 @@ class Game {
         if (this.ship.lives <= 0) {
           this.pause(); // Pausa el juego si se queda sin vidas
         }
-        this.activateInvulnerability();
+        this.ship.activateInvulnerability();
       }
     });
   }

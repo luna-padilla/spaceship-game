@@ -4,9 +4,7 @@ class Game {
     this.ship = new Ship(ctx);
     this.background = new Background(ctx);
     this.explosion = new Explosion(ctx);
-    this.shoots = [];
-    this.score = 0; // Puntuación inicial
-    this.lives = 3;
+
     this.invulnerable = false;
     this.invulnerableTimeout = 1000;
 
@@ -19,7 +17,7 @@ class Game {
 
     this.audio = new Audio("/assets/audio/Space Heroes.ogg");
     this.audio.volume = 0.05;
-    this.controlar();
+    this.ship.handleShipControls();
     this.started = false;
     this.interval = null;
   }
@@ -27,8 +25,7 @@ class Game {
   start() {
     this.audio.play();
     this.started = true;
-    this.score = 0;
-    this.lives = 3;
+
     this.invulnerable = false;
     let tick = 0;
     this.interval = setInterval(() => {
@@ -61,12 +58,6 @@ class Game {
     this.enemy.push(new Enemy(this.ctx));
   }
 
-  addShoot() {
-    const x = this.ship.x + this.ship.width + 30; // Ajusta la posición inicial del disparo
-    const y = this.ship.y + this.ship.height + 5;
-    this.shoots.push(new Shoot(this.ctx, x, y));
-  }
-
   checkCollision() {
     if (this.invulnerable) return; // Si la nave es invulnerable, no revisa colisiones
     this.enemy.forEach((enemy) => {
@@ -83,8 +74,8 @@ class Game {
         setTimeout(() => {
           this.explosionVisible = false; // Oculta la explosión después del tiempo definido
         }, this.explosionDuration);
-        this.lives--; // Pierde una vida al colisionar
-        if (this.lives <= 0) {
+        this.ship.reduceLives(); // Pierde una vida al colisionar
+        if (this.ship.lives <= 0) {
           this.pause(); // Pausa el juego si se queda sin vidas
         }
         this.activateInvulnerability();
@@ -93,9 +84,9 @@ class Game {
   }
 
   checkEnemigoDisparo() {
-    for (let i = this.shoots.length - 1; i >= 0; i--) {
+    for (let i = this.ship.shoots.length - 1; i >= 0; i--) {
       for (let j = this.enemy.length - 1; j >= 0; j--) {
-        const shoot = this.shoots[i];
+        const shoot = this.ship.shoots[i];
         const enemy = this.enemy[j];
 
         // Verifica la colisión entre el disparo y el enemigo
@@ -105,7 +96,7 @@ class Game {
           shoot.y < enemy.y + enemy.height &&
           shoot.y + shoot.height > enemy.y
         ) {
-          this.score += 10; // Aumenta la puntuación
+          this.ship.addScore(); // Aumenta la puntuación
           this.explosionX = this.enemy.x + this.enemy.w;
           this.explosionY = this.enemy.y - this.enemy.height + 5;
           this.explosionVisible = true;
@@ -120,7 +111,7 @@ class Game {
             // Elimina el disparo y el enemigo si su opacidad llega a cero
             if (shoot.opacity <= 0 && enemy.opacity <= 0) {
               this.enemy.splice(j, 1);
-              this.shoots.splice(i, 1);
+              this.ship.shoots.splice(i, 1);
               clearInterval(fadeInterval); // Detiene el desvanecimiento
             }
           }, 600); // Ajusta la velocidad del desvanecimiento
@@ -149,7 +140,7 @@ class Game {
     if (this.explosionVisible) {
       this.explosion.draw(this.explosionX, this.explosionY);
     }
-    this.shoots.forEach((shoot) => shoot.draw());
+    this.ship.shoots.forEach((shoot) => shoot.draw());
     this.enemy.forEach((enemy) => {
       enemy.draw();
     });
@@ -159,7 +150,7 @@ class Game {
     this.background.move();
     this.ship.move();
 
-    this.shoots = this.shoots.filter((shoot) => {
+    this.ship.shoots = this.ship.shoots.filter((shoot) => {
       shoot.move();
       return !shoot.isOut();
     });
@@ -176,20 +167,7 @@ class Game {
   displayScoreAndLives() {
     this.ctx.font = "20px Arial";
     this.ctx.fillStyle = "white";
-    this.ctx.fillText(`Score: ${this.score}`, 10, 20);
-    this.ctx.fillText(`Lives: ${this.lives}`, 10, 50);
-  }
-
-  controlar() {
-    document.addEventListener("keydown", (event) => {
-      if (event.keyCode === KEY_SPACE) {
-        event.preventDefault();
-        this.addShoot(); // Añade un disparo si se presiona la tecla Espacio
-      }
-      this.ship.onKeyDown(event.keyCode);
-    });
-    document.addEventListener("keyup", (event) => {
-      this.ship.onKeyUp(event.keyCode);
-    });
+    this.ctx.fillText(`Score: ${this.ship.score}`, 10, 20);
+    this.ctx.fillText(`Lives: ${this.ship.lives}`, 10, 50);
   }
 }

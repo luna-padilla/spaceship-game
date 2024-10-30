@@ -5,18 +5,30 @@ class Ship {
     this.y = this.ctx.canvas.height / 2;
     this.vy = 0;
     this.vx = 0;
-    this.aceleracionX = 0;
-    this.aceleracionY = 0;
-
     this.width = 27;
     this.height = 17;
+    this.lives = 3;
+    this.score = 0;
+    this.shoots = [];
     this.spriteSheet = new Image();
     this.spriteSheet.src = "/assets/images/gradius.png";
   }
 
+  addScore() {
+    this.score += 10;
+  }
+
+  reduceLives() {
+    this.lives--;
+  }
+
+  addShoot() {
+    const x = this.x + this.width + 30; // Ajusta la posición inicial del disparo
+    const y = this.y + this.height + 5;
+    this.shoots.push(new Shoot(this.ctx, x, y));
+  }
+
   move() {
-    this.x += this.aceleracionX;
-    this.y += this.aceleracionY;
     this.x += this.vx;
     this.y += this.vy;
     if (this.x < 0) {
@@ -66,6 +78,7 @@ class Ship {
         break;
     }
   }
+
   onKeyUp(code) {
     switch (code) {
       case KEY_RIGHT:
@@ -77,5 +90,17 @@ class Ship {
         this.vy = 0;
         break;
     }
+  }
+  handleShipControls() {
+    document.addEventListener("keydown", (event) => {
+      if (event.keyCode === KEY_SPACE) {
+        event.preventDefault();
+        this.addShoot(); // Añade un disparo si se presiona la tecla Espacio
+      }
+      this.onKeyDown(event.keyCode);
+    });
+    document.addEventListener("keyup", (event) => {
+      this.onKeyUp(event.keyCode);
+    });
   }
 }

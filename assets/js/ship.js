@@ -10,6 +10,8 @@ class Ship {
     this.lives = 3;
     this.score = 0;
     this.shoots = [];
+    this.invulnerable = false;
+    this.invulnerableTimeout = 1000;
     this.spriteSheet = new Image();
     this.spriteSheet.src = "/assets/images/gradius.png";
   }
@@ -62,7 +64,7 @@ class Ship {
       this.height * 3 // Ancho y alto del sprite al dibujarlo
     );
   }
-  
+
   onKeyDown(code) {
     switch (code) {
       case KEY_RIGHT:
@@ -92,7 +94,14 @@ class Ship {
         break;
     }
   }
-  
+
+  activateInvulnerability() {
+    this.invulnerable = true;
+    setTimeout(() => {
+      this.invulnerable = false; // Finaliza la invulnerabilidad después del tiempo definido
+    }, this.invulnerableTimeout);
+  }
+
   handleShipControls() {
     document.addEventListener("keydown", (event) => {
       if (event.keyCode === KEY_SPACE) {
@@ -105,5 +114,4 @@ class Ship {
       this.onKeyUp(event.keyCode);
     });
   }
-
 }

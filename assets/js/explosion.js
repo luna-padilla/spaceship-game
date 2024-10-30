@@ -1,7 +1,10 @@
 class Explosion {
   constructor(ctx) {
     this.ctx = ctx;
-
+    this.explosionVisible = false; // Indica si la explosión es visible
+    this.x = 0;
+    this.y = 0;
+    this.explosionDuration = 500; // Duración en ms
     this.width = 15;
     this.height = 18;
     this.spriteSheet = new Image();

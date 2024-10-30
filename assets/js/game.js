@@ -4,12 +4,8 @@ class Game {
     this.ship = new Ship(ctx);
     this.background = new Background(ctx);
     this.explosion = new Explosion(ctx);
-    this.invulnerable = false;
-    this.invulnerableTimeout = 1000;
-    this.explosionVisible = false; // Indica si la explosión es visible
-    this.explosionX = 0;
-    this.explosionY = 0;
-    this.explosionDuration = 500; // Duración en ms
+    // this.invulnerable = false;
+    // this.invulnerableTimeout = 1000; 
     this.enemy = [new Enemy(ctx)];
     this.audio = new Audio("/assets/audio/Space Heroes.ogg");
     this.audio.volume = 0.05;
@@ -22,7 +18,7 @@ class Game {
     this.audio.play();
     this.started = true;
 
-    this.invulnerable = false;
+    this.ship.invulnerable = false;
     let tick = 0;
     this.interval = setInterval(() => {
       this.clear();
@@ -56,7 +52,7 @@ class Game {
   }
 
   checkCollision() {
-    if (this.invulnerable) return; // Si la nave es invulnerable, no revisa colisiones
+    if (this.ship.invulnerable) return; // Si la nave es invulnerable, no revisa colisiones
     this.enemy.forEach((enemy) => {
       if (
         this.ship.x < enemy.x + enemy.w &&
@@ -65,12 +61,12 @@ class Game {
         this.ship.y + this.ship.height > enemy.y
       ) {
         // Almacena la posición de la explosión y actívala
-        this.explosionX = this.ship.x + this.ship.width;
-        this.explosionY = this.ship.y - this.ship.height + 5;
-        this.explosionVisible = true;
+        this.explosion.x= this.ship.x + this.ship.width;
+        this.explosion.y = this.ship.y - this.ship.height + 5;
+        this.explosion.explosionVisible = true;
         setTimeout(() => {
-          this.explosionVisible = false; // Oculta la explosión después del tiempo definido
-        }, this.explosionDuration);
+          this.explosion.explosionVisible = false; // Oculta la explosión después del tiempo definido
+        }, this.explosion.explosionDuration);
         this.ship.reduceLives(); // Pierde una vida al colisionar
         if (this.ship.lives <= 0) {
           this.pause(); // Pausa el juego si se queda sin vidas
@@ -98,13 +94,13 @@ class Game {
           this.ship.addScore(); // Aumenta la puntuación
 
           // Explosión en la posición del enemigo
-          this.explosionX = enemy.x;
-          this.explosionY = enemy.y;
-          this.explosionVisible = true;
+          this.explosion.x = enemy.x;
+          this.explosion.y= enemy.y;
+          this.explosion.explosionVisible = true;
 
           setTimeout(() => {
-            this.explosionVisible = false; // Oculta la explosión después de explosionDuration
-          }, this.explosionDuration);
+            this.explosion.explosionVisible = false; // Oculta la explosión después de explosionDuration
+          }, this.explosion.explosionDuration);
 
           // Elimina el disparo y el enemigo que colisionan
           this.enemy.splice(j, 1);
@@ -132,8 +128,8 @@ class Game {
     this.background.draw();
     this.ship.draw();
     // Dibuja la explosión solo si es visible
-    if (this.explosionVisible) {
-      this.explosion.draw(this.explosionX, this.explosionY);
+    if (this.explosion.explosionVisible) {
+      this.explosion.draw(this.explosion.x, this.explosion.y);
     }
     this.ship.shoots.forEach((shoot) => shoot.draw());
     this.enemy.forEach((enemy) => {

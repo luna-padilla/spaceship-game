@@ -4,17 +4,13 @@ class Game {
     this.ship = new Ship(ctx);
     this.background = new Background(ctx);
     this.explosion = new Explosion(ctx);
-
     this.invulnerable = false;
     this.invulnerableTimeout = 1000;
-
     this.explosionVisible = false; // Indica si la explosión es visible
     this.explosionX = 0;
     this.explosionY = 0;
-
     this.explosionDuration = 500; // Duración en ms
     this.enemy = [new Enemy(ctx)];
-
     this.audio = new Audio("/assets/audio/Space Heroes.ogg");
     this.audio.volume = 0.05;
     this.ship.handleShipControls();
@@ -30,13 +26,14 @@ class Game {
     let tick = 0;
     this.interval = setInterval(() => {
       this.clear();
+      this.draw();
+     
+      this.checkCollision(); 
+     
+      this.checkEnemyHit();
 
       this.move();
 
-      this.checkCollision();
-
-      this.checkEnemigoDisparo();
-      this.draw();
       this.displayScoreAndLives();
 
       tick++;
@@ -83,10 +80,12 @@ class Game {
     });
   }
 
-  checkEnemigoDisparo() {
+ 
+
+  checkEnemyHit() {
     for (let i = this.ship.shoots.length - 1; i >= 0; i--) {
+      const shoot = this.ship.shoots[i];
       for (let j = this.enemy.length - 1; j >= 0; j--) {
-        const shoot = this.ship.shoots[i];
         const enemy = this.enemy[j];
 
         // Verifica la colisión entre el disparo y el enemigo
@@ -97,26 +96,22 @@ class Game {
           shoot.y + shoot.height > enemy.y
         ) {
           this.ship.addScore(); // Aumenta la puntuación
-          this.explosionX = this.enemy.x + this.enemy.w;
-          this.explosionY = this.enemy.y - this.enemy.height + 5;
+
+          // Explosión en la posición del enemigo
+          this.explosionX = enemy.x;
+          this.explosionY = enemy.y;
           this.explosionVisible = true;
+
           setTimeout(() => {
-            this.explosionVisible = false; // Oculta la explosión después del tiempo definido
+            this.explosionVisible = false; // Oculta la explosión después de explosionDuration
           }, this.explosionDuration);
-          // Desvanece el disparo y el enemigo antes de eliminarlos
-          const fadeInterval = setInterval(() => {
-            shoot.opacity -= 0.1;
-            enemy.opacity -= 0.1;
 
-            // Elimina el disparo y el enemigo si su opacidad llega a cero
-            if (shoot.opacity <= 0 && enemy.opacity <= 0) {
-              this.enemy.splice(j, 1);
-              this.ship.shoots.splice(i, 1);
-              clearInterval(fadeInterval); // Detiene el desvanecimiento
-            }
-          }, 600); // Ajusta la velocidad del desvanecimiento
+          // Elimina el disparo y el enemigo que colisionan
+          this.enemy.splice(j, 1);
+          this.ship.shoots.splice(i, 1);
 
-          break; // Sale del bucle de enemigos para evitar errores
+          // Salir del bucle de enemigos una vez procesado
+          break;
         }
       }
     }
@@ -148,12 +143,11 @@ class Game {
 
   move() {
     this.background.move();
-    this.ship.move();
-
     this.ship.shoots = this.ship.shoots.filter((shoot) => {
       shoot.move();
       return !shoot.isOut();
     });
+    this.ship.move();
 
     this.enemy = this.enemy.filter((enemy) => {
       if (enemy.isOut()) {

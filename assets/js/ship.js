@@ -45,8 +45,8 @@ class Ship {
       this.y = this.ctx.canvas.height - this.height * 3;
     }
   }
+
   draw() {
-    // this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
     const spriteX = 0; // Coordenada X en la hoja de sprites
     const spriteY = 63; // Coordenada Y en la hoja de sprites
 
@@ -62,6 +62,7 @@ class Ship {
       this.height * 3 // Ancho y alto del sprite al dibujarlo
     );
   }
+  
   onKeyDown(code) {
     switch (code) {
       case KEY_RIGHT:
@@ -91,6 +92,7 @@ class Ship {
         break;
     }
   }
+  
   handleShipControls() {
     document.addEventListener("keydown", (event) => {
       if (event.keyCode === KEY_SPACE) {
@@ -103,4 +105,5 @@ class Ship {
       this.onKeyUp(event.keyCode);
     });
   }
+
 }

@@ -2,49 +2,187 @@ class Game {
   constructor(ctx) {
     this.ctx = ctx;
     this.ship = new Ship(ctx);
+    this.ship.handleShipControls();
+    this.ship.invulnerable = false;
     this.background = new Background(ctx);
     this.explosion = new Explosion(ctx);
-    // this.invulnerable = false;
-    // this.invulnerableTimeout = 1000; 
     this.enemy = [new Enemy(ctx)];
     this.audio = new Audio("/assets/audio/Space Heroes.ogg");
     this.audio.volume = 0.05;
-    this.ship.handleShipControls();
     this.started = false;
     this.interval = null;
+    window.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        if (this.gameState === "playing") {
+          this.pause();
+        } else if (this.gameState === "paused") {
+          this.resume();
+        }
+      }
+    });
+    this.gameState = "menu"; // Estados posibles: "menu", "playing", "paused", "gameOver"
+    this.buttons = {}; // Para almacenar las áreas de los botones
   }
 
   start() {
     this.audio.play();
     this.started = true;
-
-    this.ship.invulnerable = false;
+    this.gameState = "playing";
     let tick = 0;
     this.interval = setInterval(() => {
       this.clear();
       this.draw();
-     
-      this.checkCollision(); 
-     
-      this.checkEnemyHit();
+      if (this.gameState === "playing") {
+        this.checkCollision();
+        this.checkEnemyHit();
+        this.move();
+        this.displayScoreAndLives();
 
-      this.move();
-
-      this.displayScoreAndLives();
-
-      tick++;
-      if (tick >= 50) {
-        tick = 0;
-
-        this.addEnemy();
+        tick++;
+        if (tick >= 50) {
+          tick = 0;
+          this.addEnemy();
+        }
       }
     }, 1000 / 60);
   }
 
   pause() {
     this.audio.pause();
-    this.started = false;
     clearInterval(this.interval);
+    this.gameState = "paused";
+    this.drawMenu();
+  }
+  gameOver() {
+    this.audio.pause();
+    clearInterval(this.interval);
+    this.gameState = "gameOver";
+    this.drawMenu();
+  }
+  resume() {
+    this.audio.play();
+    this.start();
+  }
+  restart() {
+    // this.ship.reset(); // Supongamos que existe un método reset() en Ship
+    this.enemy = [new Enemy(this.ctx)];
+    this.gameState = "playing";
+    this.start();
+  }
+
+  endGame() {
+    this.audio.pause();
+    clearInterval(this.interval);
+    this.gameState = "menu";
+    this.drawMenu();
+  }
+
+  drawMenu() {
+    this.clear();
+    this.ctx.fillStyle = "black";
+    this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+    this.ctx.fillStyle = "white";
+    const fontSize = 30;
+    this.ctx.font = `${fontSize}px 'Press Start 2P'`;
+
+    if (this.gameState === "menu") {
+      this.ctx.fillText(
+        "Start Game",
+        this.ctx.canvas.width / 2 - 150,
+        this.ctx.canvas.height / 2 + 15
+      );
+      this.buttons.start = {
+        x: this.ctx.canvas.width / 2 - 75,
+        y: this.ctx.canvas.height / 2 - 30,
+        width: 150,
+        height: 40,
+      };
+    } else if (this.gameState === "paused") {
+      
+      this.ctx.fillText(
+        "Resume",
+        this.ctx.canvas.width / 2 - 50,
+        this.ctx.canvas.height / 2 - 40
+      );
+      this.ctx.fillText(
+        "Restart",
+        this.ctx.canvas.width / 2 - 50,
+        this.ctx.canvas.height / 2 + 20
+      );
+      this.ctx.fillText(
+        "Quit",
+        this.ctx.canvas.width / 2 - 25,
+        this.ctx.canvas.height / 2 + 80
+      );
+      this.buttons.resume = {
+        x: this.ctx.canvas.width / 2 - 50,
+        y: this.ctx.canvas.height / 2 - 70,
+        width: 100,
+        height: 40,
+      };
+      this.buttons.restart = {
+        x: this.ctx.canvas.width / 2 - 50,
+        y: this.ctx.canvas.height / 2,
+        width: 100,
+        height: 40,
+      };
+      this.buttons.quit = {
+        x: this.ctx.canvas.width / 2 - 25,
+        y: this.ctx.canvas.height / 2 + 50,
+        width: 50,
+        height: 40,
+      };
+    } else if (this.gameState === "gameOver") {
+      this.ctx.fillText(
+        "Game Over!",
+        this.ctx.canvas.width / 2 - 75,
+        this.ctx.canvas.height / 2 - 80
+      );
+      this.ctx.fillText(
+        "Restart",
+        this.ctx.canvas.width / 2 - 50,
+        this.ctx.canvas.height / 2
+      );
+      this.ctx.fillText(
+        "Quit",
+        this.ctx.canvas.width / 2 - 25,
+        this.ctx.canvas.height / 2 + 60
+      );
+      this.buttons.restart = {
+        x: this.ctx.canvas.width / 2 - 50,
+        y: this.ctx.canvas.height / 2 - 20,
+        width: 100,
+        height: 40,
+      };
+      this.buttons.quit = {
+        x: this.ctx.canvas.width / 2 - 25,
+        y: this.ctx.canvas.height / 2 + 40,
+        width: 50,
+        height: 40,
+      };
+    }
+  }
+
+  handleClick(x, y) {
+    if (this.gameState === "menu" && this.isInside(x, y, this.buttons.start)) {
+      this.start();
+    } else if (this.gameState === "paused") {
+      if (this.isInside(x, y, this.buttons.resume)) this.resume();
+      else if (this.isInside(x, y, this.buttons.restart)) this.restart();
+      else if (this.isInside(x, y, this.buttons.quit)) this.endGame();
+    } else if (this.gameState === "gameOver") {
+      if (this.isInside(x, y, this.buttons.restart)) this.restart();
+      else if (this.isInside(x, y, this.buttons.quit)) this.endGame();
+    }
+  }
+
+  isInside(x, y, button) {
+    return (
+      x > button.x &&
+      x < button.x + button.width &&
+      y > button.y &&
+      y < button.y + button.height
+    );
   }
 
   addEnemy() {
@@ -61,7 +199,7 @@ class Game {
         this.ship.y + this.ship.height > enemy.y
       ) {
         // Almacena la posición de la explosión y actívala
-        this.explosion.x= this.ship.x + this.ship.width;
+        this.explosion.x = this.ship.x + this.ship.width;
         this.explosion.y = this.ship.y - this.ship.height + 5;
         this.explosion.explosionVisible = true;
         setTimeout(() => {
@@ -69,14 +207,12 @@ class Game {
         }, this.explosion.explosionDuration);
         this.ship.reduceLives(); // Pierde una vida al colisionar
         if (this.ship.lives <= 0) {
-          this.pause(); // Pausa el juego si se queda sin vidas
+          this.gameOver();
         }
         this.ship.activateInvulnerability();
       }
     });
   }
-
- 
 
   checkEnemyHit() {
     for (let i = this.ship.shoots.length - 1; i >= 0; i--) {
@@ -92,10 +228,9 @@ class Game {
           shoot.y + shoot.height > enemy.y
         ) {
           this.ship.addScore(); // Aumenta la puntuación
-
           // Explosión en la posición del enemigo
           this.explosion.x = enemy.x;
-          this.explosion.y= enemy.y;
+          this.explosion.y = enemy.y;
           this.explosion.explosionVisible = true;
 
           setTimeout(() => {
@@ -113,13 +248,6 @@ class Game {
     }
   }
 
-  activateInvulnerability() {
-    this.invulnerable = true;
-    setTimeout(() => {
-      this.invulnerable = false; // Finaliza la invulnerabilidad después del tiempo definido
-    }, this.invulnerableTimeout);
-  }
-
   clear() {
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
   }
@@ -135,6 +263,10 @@ class Game {
     this.enemy.forEach((enemy) => {
       enemy.draw();
     });
+
+    if (this.gameState !== "playing") {
+      this.drawMenu(); // Dibuja el menú en los estados pausado y gameOver
+    }
   }
 
   move() {
@@ -155,9 +287,9 @@ class Game {
   }
 
   displayScoreAndLives() {
-    this.ctx.font = "20px Arial";
+    this.ctx.font = "10px 'Press Start 2P'";
     this.ctx.fillStyle = "white";
     this.ctx.fillText(`Score: ${this.ship.score}`, 10, 20);
-    this.ctx.fillText(`Lives: ${this.ship.lives}`, 10, 50);
+    this.ctx.fillText(`Lives: ${this.ship.lives}`, 120, 20);
   }
 }

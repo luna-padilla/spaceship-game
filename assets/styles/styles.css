@@ -1,0 +1,14 @@
+#menu {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 10px;
+    border-radius: 8px;
+  }
+  #menu button {
+    font-size: 14px;
+    padding: 8px;
+    cursor: pointer;
+  }
+  

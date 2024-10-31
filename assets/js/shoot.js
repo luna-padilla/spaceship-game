@@ -3,7 +3,7 @@ class Shoot {
     this.ctx = ctx;
     this.x = x;
     this.y = y;
-    this.width = 483 / 3;
+    this.width = 483 / 5;
     this.height = 89 / 5;
 
     this.speed = 10;

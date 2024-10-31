@@ -11,7 +11,7 @@ class Ship {
     this.score = 0;
     this.shoots = [];
     this.invulnerable = false;
-    this.invulnerableTimeout = 1000;
+    this.invulnerableTimeout = 500;
     this.spriteSheet = new Image();
     this.spriteSheet.src = "/assets/images/gradius.png";
   }
@@ -60,8 +60,8 @@ class Ship {
       this.height, // Ancho y alto del sprite en la hoja
       this.x,
       this.y, // Coordenadas donde se dibujará el sprite en el canvas
-      this.width * 3,
-      this.height * 3 // Ancho y alto del sprite al dibujarlo
+      this.width ,
+      this.height // Ancho y alto del sprite al dibujarlo
     );
   }
 

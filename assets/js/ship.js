@@ -26,12 +26,12 @@ class Ship {
   reduceLives() {
     this.lives--;
   }
-  
+
   restart() {
     this.lives = 3;
     this.score = 0;
   }
- 
+
   addShoot() {
     const currentTime = Date.now(); // Obtiene el tiempo actual en milisegundos
     if (currentTime - this.lastShotTime >= this.shootCooldown) {
@@ -136,8 +136,8 @@ class Ship {
   }
 
   checkCollision(game) {
-    if (this.invulnerable) return; 
-    this.enemies.forEach((enemy) => {
+    if (this.invulnerable) return;
+    this.enemies.forEach((enemy, index) => {
       if (
         this.x < enemy.x + enemy.w &&
         this.x + this.width > enemy.x &&
@@ -148,6 +148,7 @@ class Ship {
         game.explosion.x = this.x + this.width;
         game.explosion.y = this.y - this.height + 5;
         game.explosion.explosionVisible = true;
+        this.enemies.splice(index, 1);
         setTimeout(() => {
           game.explosion.explosionVisible = false; // Oculta la explosión después del tiempo definido
         }, game.explosion.explosionDuration);
@@ -159,5 +160,4 @@ class Ship {
       }
     });
   }
-
 }

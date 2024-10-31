@@ -27,7 +27,10 @@ class Ship {
   reduceLives() {
     this.lives--;
   }
-
+  restart() {
+    this.lives = 3;
+    this.score = 0;
+  }
   // addShoot() {
   //   const x = this.x + this.width + 30; // Ajusta la posición inicial del disparo
   //   const y = this.y + this.height + 5;

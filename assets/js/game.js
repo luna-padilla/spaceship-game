@@ -69,6 +69,7 @@ class Game {
     // this.ship.reset(); // Supongamos que existe un método reset() en Ship
     this.enemy = [new Enemy(this.ctx)];
     this.gameState = "playing";
+    this.ship.restart();
     this.start();
   }
 
@@ -84,7 +85,7 @@ class Game {
     this.ctx.fillStyle = "black";
     this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
     this.ctx.fillStyle = "white";
-    const fontSize = 30;
+    const fontSize = 25;
     this.ctx.font = `${fontSize}px 'Press Start 2P'`;
     ///////////////////////////////////////////////
     if (this.gameState === "menu") {

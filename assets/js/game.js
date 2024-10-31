@@ -39,7 +39,7 @@ class Game {
         this.displayScoreAndLives();
 
         tick++;
-        if (tick >= 50) {
+        if (tick >= 20) {
           tick = 0;
           this.addEnemy();
         }
@@ -60,10 +60,12 @@ class Game {
     this.drawMenu();
   }
   resume() {
+    alert("resume");
     this.audio.play();
     this.start();
   }
   restart() {
+    alert("restart");
     // this.ship.reset(); // Supongamos que existe un método reset() en Ship
     this.enemy = [new Enemy(this.ctx)];
     this.gameState = "playing";
@@ -84,81 +86,76 @@ class Game {
     this.ctx.fillStyle = "white";
     const fontSize = 30;
     this.ctx.font = `${fontSize}px 'Press Start 2P'`;
-
+    ///////////////////////////////////////////////
     if (this.gameState === "menu") {
       this.ctx.fillText(
         "Start Game",
         this.ctx.canvas.width / 2 - 150,
         this.ctx.canvas.height / 2 + 15
       );
+
       this.buttons.start = {
-        x: this.ctx.canvas.width / 2 - 75,
-        y: this.ctx.canvas.height / 2 - 30,
-        width: 150,
-        height: 40,
+        x: this.ctx.canvas.width / 2 - 150,
+        y: this.ctx.canvas.height / 2 + 15 - fontSize,
+        width: fontSize * "Start Game".length,
+        height: fontSize,
       };
+      ///////////////////////////////////////
     } else if (this.gameState === "paused") {
-      
-      this.ctx.fillText(
-        "Resume",
-        this.ctx.canvas.width / 2 - 50,
-        this.ctx.canvas.height / 2 - 40
-      );
+      const centerWordX = this.ctx.canvas.width / 2 - 90;
+
+      this.ctx.fillText("Resume", centerWordX, this.ctx.canvas.height / 2 - 40);
+
       this.ctx.fillText(
         "Restart",
-        this.ctx.canvas.width / 2 - 50,
+        centerWordX,
         this.ctx.canvas.height / 2 + 20
       );
-      this.ctx.fillText(
-        "Quit",
-        this.ctx.canvas.width / 2 - 25,
-        this.ctx.canvas.height / 2 + 80
-      );
+
+      this.ctx.fillText("Quit", centerWordX, this.ctx.canvas.height / 2 + 80);
+
       this.buttons.resume = {
-        x: this.ctx.canvas.width / 2 - 50,
-        y: this.ctx.canvas.height / 2 - 70,
-        width: 100,
-        height: 40,
+        x: centerWordX,
+        y: this.ctx.canvas.height / 2 - 40 - fontSize,
+        width: fontSize * "Resume".length,
+        height: fontSize,
       };
+
       this.buttons.restart = {
-        x: this.ctx.canvas.width / 2 - 50,
-        y: this.ctx.canvas.height / 2,
-        width: 100,
-        height: 40,
+        x: centerWordX,
+        y: this.ctx.canvas.height / 2 + 20 - fontSize,
+        width: fontSize * "Restart".length,
+        height: fontSize,
       };
+
       this.buttons.quit = {
-        x: this.ctx.canvas.width / 2 - 25,
-        y: this.ctx.canvas.height / 2 + 50,
-        width: 50,
-        height: 40,
+        x: centerWordX,
+        y: this.ctx.canvas.height / 2 + 80 - fontSize,
+        width: fontSize * "Quit".length,
+        height: fontSize,
       };
-    } else if (this.gameState === "gameOver") {
+    }
+    /////////////////////////////
+    else if (this.gameState === "gameOver") {
+      const centerWordX = this.ctx.canvas.width / 2 - 160;
       this.ctx.fillText(
         "Game Over!",
-        this.ctx.canvas.width / 2 - 75,
+        centerWordX,
         this.ctx.canvas.height / 2 - 80
       );
-      this.ctx.fillText(
-        "Restart",
-        this.ctx.canvas.width / 2 - 50,
-        this.ctx.canvas.height / 2
-      );
-      this.ctx.fillText(
-        "Quit",
-        this.ctx.canvas.width / 2 - 25,
-        this.ctx.canvas.height / 2 + 60
-      );
+      this.ctx.fillText("Restart", centerWordX, this.ctx.canvas.height / 2);
+      this.ctx.fillText("Quit", centerWordX, this.ctx.canvas.height / 2 + 60);
       this.buttons.restart = {
-        x: this.ctx.canvas.width / 2 - 50,
-        y: this.ctx.canvas.height / 2 - 20,
-        width: 100,
-        height: 40,
+        x: centerWordX,
+        y: this.ctx.canvas.height / 2 - fontSize,
+        width: fontSize * "Restart".length,
+        height: fontSize,
       };
       this.buttons.quit = {
-        x: this.ctx.canvas.width / 2 - 25,
-        y: this.ctx.canvas.height / 2 + 40,
-        width: 50,
-        height: 40,
+        x: centerWordX,
+        y: this.ctx.canvas.height / 2 + 60 - fontSize,
+        width: fontSize * "Quit".length,
+        height: fontSize,
       };
     }
   }

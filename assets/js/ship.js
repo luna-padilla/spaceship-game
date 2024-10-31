@@ -9,6 +9,10 @@ class Ship {
     this.height = 17;
     this.lives = 3;
     this.score = 0;
+
+    this.lastShotTime = 0; // Tiempo del último disparo
+    this.shootCooldown = 250; // 1000 ms = 1 segundo
+
     this.shoots = [];
     this.invulnerable = false;
     this.invulnerableTimeout = 500;
@@ -24,12 +28,22 @@ class Ship {
     this.lives--;
   }
 
-  addShoot() {
-    const x = this.x + this.width + 30; // Ajusta la posición inicial del disparo
-    const y = this.y + this.height + 5;
-    this.shoots.push(new Shoot(this.ctx, x, y));
-  }
+  // addShoot() {
+  //   const x = this.x + this.width + 30; // Ajusta la posición inicial del disparo
+  //   const y = this.y + this.height + 5;
+  //   this.shoots.push(new Shoot(this.ctx, x, y));
+  // }
 
+  addShoot() {
+    const currentTime = Date.now(); // Obtiene el tiempo actual en milisegundos
+    if (currentTime - this.lastShotTime >= this.shootCooldown) {
+      // Solo dispara si ha pasado el tiempo de cooldown
+      this.shoots.push(
+        new Shoot(this.ctx, this.x + this.width, this.y + this.height / 2)
+      );
+      this.lastShotTime = currentTime; // Actualiza el tiempo del último disparo
+    }
+  }
   move() {
     this.x += this.vx;
     this.y += this.vy;
@@ -60,8 +74,8 @@ class Ship {
       this.height, // Ancho y alto del sprite en la hoja
       this.x,
       this.y, // Coordenadas donde se dibujará el sprite en el canvas
-      this.width ,
-      this.height // Ancho y alto del sprite al dibujarlo
+      this.width * 3,
+      this.height * 3 // Ancho y alto del sprite al dibujarlo
     );
   }
 

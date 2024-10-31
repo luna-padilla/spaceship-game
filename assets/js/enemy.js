@@ -10,7 +10,8 @@ class Enemy {
       Math.floor(
         Math.random() * (this.ctx.canvas.height - this.height - 2 * margin)
       ) + margin;
-    this.vx = -5; // Velocidad en X (se mueve. hacia la izquierda)
+    this.vx = Math.floor(Math.random() * 10) - 22;
+
     this.img = new Image();
     this.img.src = "/assets/images/gradius.png"; // Imagen del enemigo
   }

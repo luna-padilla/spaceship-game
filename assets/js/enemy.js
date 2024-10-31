@@ -10,7 +10,7 @@ class Enemy {
       Math.floor(
         Math.random() * (this.ctx.canvas.height - this.height - 2 * margin)
       ) + margin;
-    this.vx = Math.floor(Math.random() * 10) - 22;
+    this.vx = Math.floor(Math.random() * 10) - 20;
 
     this.img = new Image();
     this.img.src = "/assets/images/gradius.png"; // Imagen del enemigo
@@ -29,6 +29,7 @@ class Enemy {
       this.height
     );
   }
+  
   move() {
     // Actualizar la posición X con la velocidad
     this.x += this.vx;
@@ -50,4 +51,51 @@ class Enemy {
     }
     return fuera;
   }
+
+  checkShootEnemy(game) {
+    for (let i = game.ship.shoots.length - 1; i >= 0; i--) {
+      const shoot = game.ship.shoots[i];
+      for (let j = game.ship.enemies.length - 1; j >= 0; j--) {
+        const enemy = game.ship.enemies[j];
+
+        // Verifica la colisión entre el disparo y el enemigo
+        if (
+          shoot.x < enemy.x + enemy.w &&
+          shoot.x + shoot.width > enemy.x &&
+          shoot.y < enemy.y + enemy.height &&
+          shoot.y + shoot.height > enemy.y
+        ) {
+          game.ship.addScore(); // Aumenta la puntuación
+          // Explosión en la posición del enemigo
+          game.explosion.x = enemy.x;
+          game.explosion.y = enemy.y;
+          game.explosion.explosionVisible = true;
+
+          setTimeout(() => {
+            game.explosion.explosionVisible = false; // Oculta la explosión después de explosionDuration
+          }, game.explosion.explosionDuration);
+
+          // Elimina el disparo y el enemigo que colisionan
+          game.ship.enemies.splice(j, 1);
+          game.ship.shoots.splice(i, 1);
+
+          // Salir del bucle de enemigos una vez procesado
+          break;
+        }
+      }
+    }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

@@ -9,15 +9,14 @@ class Ship {
     this.height = 17;
     this.lives = 3;
     this.score = 0;
-
     this.lastShotTime = 0; // Tiempo del último disparo
     this.shootCooldown = 250; // 1000 ms = 1 segundo
-
     this.shoots = [];
     this.invulnerable = false;
     this.invulnerableTimeout = 500;
     this.spriteSheet = new Image();
     this.spriteSheet.src = "/assets/images/gradius.png";
+    this.enemies = [new Enemy(ctx)];
   }
 
   addScore() {
@@ -27,16 +26,12 @@ class Ship {
   reduceLives() {
     this.lives--;
   }
+  
   restart() {
     this.lives = 3;
     this.score = 0;
   }
-  // addShoot() {
-  //   const x = this.x + this.width + 30; // Ajusta la posición inicial del disparo
-  //   const y = this.y + this.height + 5;
-  //   this.shoots.push(new Shoot(this.ctx, x, y));
-  // }
-
+ 
   addShoot() {
     const currentTime = Date.now(); // Obtiene el tiempo actual en milisegundos
     if (currentTime - this.lastShotTime >= this.shootCooldown) {
@@ -47,6 +42,7 @@ class Ship {
       this.lastShotTime = currentTime; // Actualiza el tiempo del último disparo
     }
   }
+
   move() {
     this.x += this.vx;
     this.y += this.vy;
@@ -131,4 +127,37 @@ class Ship {
       this.onKeyUp(event.keyCode);
     });
   }
+
+  displayScoreAndLives() {
+    this.ctx.font = "10px 'Press Start 2P'";
+    this.ctx.fillStyle = "white";
+    this.ctx.fillText(`Score: ${this.score}`, 10, 20);
+    this.ctx.fillText(`Lives: ${this.lives}`, 120, 20);
+  }
+
+  checkCollision(game) {
+    if (this.invulnerable) return; 
+    this.enemies.forEach((enemy) => {
+      if (
+        this.x < enemy.x + enemy.w &&
+        this.x + this.width > enemy.x &&
+        this.y < enemy.y + enemy.height &&
+        this.y + this.height > enemy.y
+      ) {
+        // Almacena la posición de la explosión y actívala
+        game.explosion.x = this.x + this.width;
+        game.explosion.y = this.y - this.height + 5;
+        game.explosion.explosionVisible = true;
+        setTimeout(() => {
+          game.explosion.explosionVisible = false; // Oculta la explosión después del tiempo definido
+        }, game.explosion.explosionDuration);
+        this.reduceLives(); // Pierde una vida al colisionar
+        if (this.lives <= 0) {
+          game.gameOver();
+        }
+        this.activateInvulnerability();
+      }
+    });
+  }
+
 }

@@ -5,14 +5,15 @@ class Shoot {
     this.y = y;
     this.width = 483 / 5;
     this.height = 89 / 5;
-
     this.speed = 10;
     this.spriteSheet = new Image();
     this.spriteSheet.src = "/assets/images/disparos.png";
   }
+
   move() {
     this.x += this.speed;
   }
+  
   draw() {
     // this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
     const spriteX = 210; // Coordenada X en la hoja de sprites

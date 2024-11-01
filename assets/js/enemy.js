@@ -1,8 +1,8 @@
 class Enemy {
   constructor(ctx) {
     this.ctx = ctx;
-    this.w = 30;
-    this.height = 75;
+    this.w = 64;
+    this.height = 32;
     this.x = this.ctx.canvas.width - this.w - 20; // Posición inicial en el eje X
     const margin = 50; // Ajusta este valor según tus necesidades
 
@@ -10,26 +10,33 @@ class Enemy {
       Math.floor(
         Math.random() * (this.ctx.canvas.height - this.height - 2 * margin)
       ) + margin;
-    this.vx = Math.floor(Math.random() * 10) - 15;
+    this.vx = Math.floor(Math.random() * 3) - 8;
 
     this.img = new Image();
-    this.img.src = "/assets/images/gradius.png"; // Imagen del enemigo
+
+    this.enemyImages = [
+      // "/assets/images/small-A.png",
+      // "/assets/images/small-B.png", // Otra imagen de ejemplo
+      "/assets/images/naves-enemigas.png"
+    ];
+    this.img.src =
+      this.enemyImages[Math.floor(Math.random() * this.enemyImages.length)]; // Selecciona una imagen aleatoria del arreglo
   }
 
   draw() {
     this.ctx.drawImage(
       this.img,
-      79,
-      64,
-      15,
-      15,
+      150,
+      90,
+      62,
+      30,
       this.x,
       this.y,
-      this.w,
+      this.w ,
       this.height
     );
   }
-  
+
   move() {
     // Actualizar la posición X con la velocidad
     this.x += this.vx;
@@ -85,17 +92,4 @@ class Enemy {
       }
     }
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

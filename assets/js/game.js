@@ -27,7 +27,7 @@ class Game {
         this.ship.displayScoreAndLives();
 
         tick++;
-        if (tick >= 20) {
+        if (tick >= 60) {
           tick = 0;
           this.addEnemy();
         }

@@ -3,12 +3,13 @@ class Background {
       this.ctx = ctx;
       this.x = 0;
       this.y = 0;
-      this.vx = -5;
+      this.vx = -2;
   
       this.w = this.ctx.canvas.width;
       this.h = this.ctx.canvas.height;
       this.image = new Image();
-      this.image.src = "/assets/images/Cielo_estrellado.jpg";
+      this.image.src = "/assets/images/fantasy-landscape.jpg";
+       this.image.src = "/assets/images/Cielo_estrellado.jpg";
     }
   
     draw() {

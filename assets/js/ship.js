@@ -5,8 +5,10 @@ class Ship {
     this.y = this.ctx.canvas.height / 2;
     this.vy = 0;
     this.vx = 0;
-    this.width = 27;
-    this.height = 17;
+    // this.width = 27;
+    // this.height = 17;
+    this.width = 75;
+    this.height = 26;
     this.lives = 3;
     this.score = 0;
     this.lastShotTime = 0; // Tiempo del último disparo
@@ -16,7 +18,13 @@ class Ship {
     this.invulnerableTimeout = 500;
     this.spriteSheet = new Image();
     this.spriteSheet.src = "/assets/images/gradius.png";
+    this.spriteSheet.src = "/assets/images/SpaceShip.png";
+    this.spriteSheet.src = "/assets/images/nave-modificado-tamano.png";
+    // this.spriteSheet.src = "/assets/images/Gemini.png";
     this.enemies = [new Enemy(ctx)];
+    this.spriteSheet.frames = 2;
+    this.spriteSheet.frameIndex = 0;
+    this.tick=0;
   }
 
   addScore() {
@@ -37,7 +45,7 @@ class Ship {
     if (currentTime - this.lastShotTime >= this.shootCooldown) {
       // Solo dispara si ha pasado el tiempo de cooldown
       this.shoots.push(
-        new Shoot(this.ctx, this.x + this.width, this.y + this.height / 2)
+        new Shoot(this.ctx, this.x + this.width - 10 , this.y + this.height / 2  )
       );
       this.lastShotTime = currentTime; // Actualiza el tiempo del último disparo
     }
@@ -63,7 +71,7 @@ class Ship {
 
   draw() {
     const spriteX = 0; // Coordenada X en la hoja de sprites
-    const spriteY = 63; // Coordenada Y en la hoja de sprites
+    const spriteY = 0; // Coordenada Y en la hoja de sprites
 
     this.ctx.drawImage(
       this.spriteSheet,
@@ -73,10 +81,11 @@ class Ship {
       this.height, // Ancho y alto del sprite en la hoja
       this.x,
       this.y, // Coordenadas donde se dibujará el sprite en el canvas
-      this.width * 3,
-      this.height * 3 // Ancho y alto del sprite al dibujarlo
+      this.width,
+      this.height // Ancho y alto del sprite al dibujarlo
     );
   }
+
 
   onKeyDown(code) {
     switch (code) {
@@ -145,8 +154,8 @@ class Ship {
         this.y + this.height > enemy.y
       ) {
         // Almacena la posición de la explosión y actívala
-        game.explosion.x = this.x + this.width;
-        game.explosion.y = this.y - this.height + 5;
+        game.explosion.x = this.x + this.width-35;
+        game.explosion.y = this.y - this.height+20;
         game.explosion.explosionVisible = true;
         this.enemies.splice(index, 1);
         setTimeout(() => {

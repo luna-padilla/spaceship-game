@@ -3,11 +3,11 @@ class Shoot {
     this.ctx = ctx;
     this.x = x;
     this.y = y;
-    this.width = 483 / 5;
-    this.height = 89 / 5;
+    this.width =68;
+    this.height = 16;
     this.speed = 10;
     this.spriteSheet = new Image();
-    this.spriteSheet.src = "/assets/images/disparos.png";
+    this.spriteSheet.src = "/assets/images/laser-2.png";
   }
 
   move() {
@@ -16,8 +16,8 @@ class Shoot {
   
   draw() {
     // this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
-    const spriteX = 210; // Coordenada X en la hoja de sprites
-    const spriteY = 1780; // Coordenada Y en la hoja de sprites
+    const spriteX = 23; // Coordenada X en la hoja de sprites
+    const spriteY = 33; // Coordenada Y en la hoja de sprites
 
     this.ctx.drawImage(
       this.spriteSheet,
@@ -28,7 +28,7 @@ class Shoot {
       this.x,
       this.y, // Coordenadas donde se dibujará el sprite en el canvas
       this.width,
-      this.height // Ancho y alto del sprite al dibujarlo
+      this.height / 2 // Ancho y alto del sprite al dibujarlo
     );
   }
 

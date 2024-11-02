@@ -1,5 +1,5 @@
 class Shoot {
-  constructor(ctx, x, y, speed) {
+  constructor(ctx, x, y, speed,src) {
     this.ctx = ctx;
     this.x = x;
     this.y = y;
@@ -7,7 +7,8 @@ class Shoot {
     this.width = 68;
     this.height = 16;
     this.spriteSheet = new Image();
-    this.spriteSheet.src = "/assets/images/laser-2.png";
+
+    this.spriteSheet.src = src;
   }
 
   move() {

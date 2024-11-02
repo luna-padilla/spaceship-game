@@ -8,6 +8,7 @@ class Game {
     this.enemy = new Enemy(ctx);
     this.menu = new Menu(ctx);
     this.menu.handleKeypresses(this);
+    this.powerUp = new PowerUp(ctx);
     this.audio = new Audio("/assets/audio/Space Heroes.ogg");
     this.audio.volume = 0.05;
     this.interval = null;
@@ -33,7 +34,7 @@ class Game {
         this.enemy.checkShootEnemy(this);
         this.move();
         this.ship.displayScoreAndLives();
-
+        
         tick++;
         if (tick >= 60) {
           tick = 0;
@@ -102,13 +103,13 @@ class Game {
     });
     this.ship.enemies.forEach((enemy) =>
       enemy.shoots.forEach((shoot) => {
-        console.log("entro");
         shoot.draw();
       })
     );
     if (this.menu.gameState !== "playing") {
       this.menu.drawMenu(); // Dibuja el menú en los estados pausado y gameOver
     }
+    this.powerUp.draw();
   }
 
   move() {
@@ -133,5 +134,6 @@ class Game {
         return !shoot.isOut();
       });
     });
+    this.powerUp.move();
   }
 }

@@ -1,11 +1,11 @@
 class Shoot {
-  constructor(ctx, x, y) {
+  constructor(ctx, x, y, speed) {
     this.ctx = ctx;
     this.x = x;
     this.y = y;
-    this.width =68;
+    this.speed = speed;
+    this.width = 68;
     this.height = 16;
-    this.speed = 10;
     this.spriteSheet = new Image();
     this.spriteSheet.src = "/assets/images/laser-2.png";
   }
@@ -13,7 +13,7 @@ class Shoot {
   move() {
     this.x += this.speed;
   }
-  
+
   draw() {
     // this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
     const spriteX = 23; // Coordenada X en la hoja de sprites

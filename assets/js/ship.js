@@ -27,6 +27,7 @@ class Ship {
     this.tick=0;
   }
 
+
   addScore() {
     this.score += 10;
   }
@@ -45,7 +46,7 @@ class Ship {
     if (currentTime - this.lastShotTime >= this.shootCooldown) {
       // Solo dispara si ha pasado el tiempo de cooldown
       this.shoots.push(
-        new Shoot(this.ctx, this.x + this.width - 10 , this.y + this.height / 2  )
+        new Shoot(this.ctx, this.x + this.width - 10 , this.y + this.height / 2, 10 )
       );
       this.lastShotTime = currentTime; // Actualiza el tiempo del último disparo
     }

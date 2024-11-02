@@ -21,7 +21,15 @@ class Game {
       this.clear();
       this.draw();
       if (this.menu.gameState === "playing") {
+        this.ship.enemies.forEach((enemy) => {
+          enemy.addShoot();
+        });
         this.ship.checkCollision(this);
+        this.enemy.checkHitByShipShoot(this.ship, this);
+        this.ship.enemies.forEach((enemy) => {
+          enemy.checkShootEnemy(this);
+        });
+
         this.enemy.checkShootEnemy(this);
         this.move();
         this.ship.displayScoreAndLives();
@@ -41,7 +49,7 @@ class Game {
     this.menu.gameState = "paused";
     this.menu.drawMenu();
   }
-  
+
   gameOver() {
     this.audio.pause();
     clearInterval(this.interval);
@@ -88,8 +96,16 @@ class Game {
     this.ship.shoots.forEach((shoot) => shoot.draw());
     this.ship.enemies.forEach((enemy) => {
       enemy.draw();
+      if (this.explosion.explosionVisible) {
+        this.explosion.draw(this.explosion.x, this.explosion.y);
+      }
     });
-
+    this.ship.enemies.forEach((enemy) =>
+      enemy.shoots.forEach((shoot) => {
+        console.log("entro");
+        shoot.draw();
+      })
+    );
     if (this.menu.gameState !== "playing") {
       this.menu.drawMenu(); // Dibuja el menú en los estados pausado y gameOver
     }
@@ -109,6 +125,13 @@ class Game {
       }
       enemy.move();
       return true;
+    });
+
+    this.ship.enemies.forEach((enemy) => {
+      enemy.shoots = enemy.shoots.filter((shoot) => {
+        shoot.move();
+        return !shoot.isOut();
+      });
     });
   }
 }

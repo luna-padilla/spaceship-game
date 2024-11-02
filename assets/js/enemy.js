@@ -17,10 +17,13 @@ class Enemy {
     this.enemyImages = [
       // "/assets/images/small-A.png",
       // "/assets/images/small-B.png", // Otra imagen de ejemplo
-      "/assets/images/naves-enemigas.png"
+      "/assets/images/naves-enemigas.png",
     ];
     this.img.src =
       this.enemyImages[Math.floor(Math.random() * this.enemyImages.length)]; // Selecciona una imagen aleatoria del arreglo
+    this.lastShotTime = 0; // Tiempo del último disparo
+    this.shootCooldown = 1000; // 1000 ms = 1 segundo
+    this.shoots = [];
   }
 
   draw() {
@@ -32,7 +35,7 @@ class Enemy {
       30,
       this.x,
       this.y,
-      this.w ,
+      this.w,
       this.height
     );
   }
@@ -59,37 +62,78 @@ class Enemy {
     return fuera;
   }
 
-  checkShootEnemy(game) {
-    for (let i = game.ship.shoots.length - 1; i >= 0; i--) {
-      const shoot = game.ship.shoots[i];
-      for (let j = game.ship.enemies.length - 1; j >= 0; j--) {
-        const enemy = game.ship.enemies[j];
-
-        // Verifica la colisión entre el disparo y el enemigo
+  checkHitByShipShoot(ship, game) {
+    // Recorre cada disparo de la nave
+    for (let i = ship.shoots.length - 1; i >= 0; i--) {
+      const shoot = ship.shoots[i];
+      for (let j = 0; j < ship.enemies.length; j++) {
+        const enemie = ship.enemies[j];
+        // Verifica si el disparo ha colisionado con el enemigo
         if (
-          shoot.x < enemy.x + enemy.w &&
-          shoot.x + shoot.width > enemy.x &&
-          shoot.y < enemy.y + enemy.height &&
-          shoot.y + shoot.height > enemy.y
+          shoot.x < enemie.x + enemie.w &&
+          shoot.x + shoot.width > enemie.x &&
+          shoot.y < enemie.y + enemie.height &&
+          shoot.y + shoot.height > enemie.y
         ) {
-          game.ship.addScore(); // Aumenta la puntuación
-          // Explosión en la posición del enemigo
-          game.explosion.x = enemy.x;
-          game.explosion.y = enemy.y;
+          // Puedes reducir la vida del enemigo o dar puntos al jugador aquí
+          // ship.addScore();
+          game.explosion.x = enemie.x;
+          game.explosion.y = enemie.y;
           game.explosion.explosionVisible = true;
 
           setTimeout(() => {
             game.explosion.explosionVisible = false; // Oculta la explosión después de explosionDuration
           }, game.explosion.explosionDuration);
-
-          // Elimina el disparo y el enemigo que colisionan
-          game.ship.enemies.splice(j, 1);
-          game.ship.shoots.splice(i, 1);
-
-          // Salir del bucle de enemigos una vez procesado
+          // Elimina el disparo de la nave
+          ship.shoots.splice(i, 1);
+          ship.enemies.splice(j, 1);
+          // Detén la iteración si solo queremos detectar un disparo por enemigo
           break;
         }
       }
+    }
+  }
+
+  checkShootEnemy(game) {
+    for (let i = this.shoots.length - 1; i >= 0; i--) {
+      const shoot = this.shoots[i];
+
+      // Verifica la colisión entre el disparo del enemigo y la nave del jugador
+      if (
+        shoot.x < game.ship.x + game.ship.width &&
+        shoot.x + shoot.width > game.ship.x &&
+        shoot.y < game.ship.y + game.ship.height &&
+        shoot.y + shoot.height > game.ship.y
+      ) {
+        game.ship.reduceLives(); // Reduce la puntuación
+        // Explosión en la posición del enemigo
+        game.explosion.x = game.ship.x + 45;
+        game.explosion.y = game.ship.y;
+        game.explosion.explosionVisible = true;
+
+        setTimeout(() => {
+          game.explosion.explosionVisible = false; // Oculta la explosión después de explosionDuration
+        }, game.explosion.explosionDuration);
+
+        // Elimina el disparo
+
+        this.shoots.splice(i, 1);
+
+        // Salir del bucle
+        break;
+      }
+    }
+  }
+
+  addShoot() {
+    const currentTime = Date.now(); // Obtiene el tiempo actual en milisegundos
+    if (currentTime - this.lastShotTime >= this.shootCooldown) {
+      // Solo dispara si ha pasado el tiempo de cooldown
+
+      this.shoots.push(
+        new Shoot(this.ctx, this.x - 46, this.y + this.height / 2, -10)
+      );
+      this.lastShotTime = currentTime; // Actualiza el tiempo del último disparo
     }
   }
 }

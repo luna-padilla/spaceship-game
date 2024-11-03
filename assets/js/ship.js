@@ -7,7 +7,7 @@ class Ship {
     this.vx = 0;
     this.width = 75;
     this.height = 26;
-    this.lives = 30;
+    this.lives = 3;
     this.score = 0;
     this.lastShotTime = 0; // Tiempo del último disparo
     this.shootCooldown = 250; // 1000 ms = 1 segundo
@@ -59,15 +59,15 @@ class Ship {
     if (this.x < 0) {
       this.x = 0;
     }
-    if (this.x + this.width * 3 > this.ctx.canvas.width) {
-      this.x = this.ctx.canvas.width - this.width * 3;
+    if (this.x + this.width > this.ctx.canvas.width) {
+      this.x = this.ctx.canvas.width - this.width ;
     }
     if (this.y < 0) {
       this.y = 0;
     }
 
-    if (this.y + this.height * 3 > this.ctx.canvas.height) {
-      this.y = this.ctx.canvas.height - this.height * 3;
+    if (this.y + this.height  > this.ctx.canvas.height) {
+      this.y = this.ctx.canvas.height - this.height ;
     }
   }
 
@@ -148,9 +148,8 @@ class Ship {
   displayScoreAndLives() {
     this.ctx.font = "10px 'Press Start 2P'";
     this.ctx.fillStyle = "white";
-    this.ctx.fillText(`Score: ${this.score}`, 10, 20);
-    this.ctx.fillText(`Lives: ${this.lives}`, 120, 20);
-    this.ctx.fillText(`Enemies: ${this.counterKilledEnemy}`, 180, 20);
+    this.ctx.fillText(`Score: ${this.score}`, 50, 20);
+    this.ctx.fillText(`Lives: ${this.lives}`, 140, 20);
   }
 
   checkCollision(game) {

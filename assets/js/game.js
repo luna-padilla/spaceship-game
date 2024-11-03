@@ -142,7 +142,9 @@ class Game {
       });
     });
     if (this.ship.counterKilledEnemy % 5 == 0) {
+
       this.powerUp.move();
+    
     }
   }
 }

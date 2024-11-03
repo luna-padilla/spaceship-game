@@ -10,8 +10,7 @@ class Enemy {
       Math.floor(
         Math.random() * (this.ctx.canvas.height - this.height - 2 * margin)
       ) + margin;
-    this.vx = Math.floor(Math.random() * 3) - 4;
-    
+    this.vx = Math.floor(Math.random() * 3) - 5;
 
     this.img = new Image();
 

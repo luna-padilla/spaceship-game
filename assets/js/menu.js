@@ -16,7 +16,7 @@ class Menu {
       }
     });
   }
-  
+
   drawMenu() {
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
     this.ctx.fillStyle = "black";
@@ -24,75 +24,79 @@ class Menu {
     this.ctx.fillStyle = "white";
     const fontSize = 25;
     this.ctx.font = `${fontSize}px 'Press Start 2P'`;
-   
-    if (this.gameState === "menu") {
-      this.ctx.fillText(
-        "Start Game",
-        this.ctx.canvas.width / 2 - 150,
-        this.ctx.canvas.height / 2 + 15
-      );
+    this.ctx.textAlign = "center";
 
+    const middlePointInX = this.ctx.canvas.width / 2;
+    const middlePointInY = this.ctx.canvas.height / 2;
+
+    const startGametext = "Start Game";
+    const startGametextWidth = fontSize * startGametext.length;
+
+    const restartText = "Restart";
+    const restartTextWidth = fontSize * restartText.length;
+
+    const quitText = "Quit";
+    const quitTextWidth = fontSize * quitText.length;
+
+    const gameOverText = "Game Over!";
+    const gameOverTextWidth = fontSize * gameOverText.length;
+
+    const resumeText = "Resume";
+    const resumeTextWidth = fontSize * resumeText.length;
+
+    if (this.gameState === "menu") {
+      this.ctx.fillText(startGametext, middlePointInX, middlePointInY + 15);
       this.buttons.start = {
-        x: this.ctx.canvas.width / 2 - 150,
-        y: this.ctx.canvas.height / 2 + 15 - fontSize,
-        width: fontSize * "Start Game".length,
+        x: middlePointInX - startGametextWidth / 2,
+        y: middlePointInY + 15 - fontSize,
+        width: startGametextWidth,
         height: fontSize,
       };
-   
     } else if (this.gameState === "paused") {
-      const centerWordX = this.ctx.canvas.width / 2 - 90;
+      this.ctx.fillText(resumeText, middlePointInX, middlePointInY - 40);
 
-      this.ctx.fillText("Resume", centerWordX, this.ctx.canvas.height / 2 - 40);
+      this.ctx.fillText(restartText, middlePointInX, middlePointInY + 20);
 
-      this.ctx.fillText(
-        "Restart",
-        centerWordX,
-        this.ctx.canvas.height / 2 + 20
-      );
-
-      this.ctx.fillText("Quit", centerWordX, this.ctx.canvas.height / 2 + 80);
+      this.ctx.fillText(quitText, middlePointInX, middlePointInY + 80);
 
       this.buttons.resume = {
-        x: centerWordX,
-        y: this.ctx.canvas.height / 2 - 40 - fontSize,
-        width: fontSize * "Resume".length,
+        x: middlePointInX - resumeTextWidth / 2,
+        y: middlePointInY - 40 - fontSize,
+        width: resumeTextWidth,
         height: fontSize,
       };
 
       this.buttons.restart = {
-        x: centerWordX,
-        y: this.ctx.canvas.height / 2 + 20 - fontSize,
-        width: fontSize * "Restart".length,
+        x: middlePointInX - restartTextWidth / 2,
+        y: middlePointInY + 20 - fontSize,
+        width: restartTextWidth,
         height: fontSize,
       };
 
       this.buttons.quit = {
-        x: centerWordX,
-        y: this.ctx.canvas.height / 2 + 80 - fontSize,
-        width: fontSize * "Quit".length,
+        x: middlePointInX - quitTextWidth / 2,
+        y: middlePointInY + 80 - fontSize,
+        width: quitTextWidth,
         height: fontSize,
       };
-    }
 
-    else if (this.gameState === "gameOver") {
-      const centerWordX = this.ctx.canvas.width / 2 - 160;
-      this.ctx.fillText(
-        "Game Over!",
-        centerWordX,
-        this.ctx.canvas.height / 2 - 80
-      );
-      this.ctx.fillText("Restart", centerWordX, this.ctx.canvas.height / 2);
-      this.ctx.fillText("Quit", centerWordX, this.ctx.canvas.height / 2 + 60);
+    } else if (this.gameState === "gameOver") {
+      
+      this.ctx.fillText(gameOverText, middlePointInX, middlePointInY - 80);
+      this.ctx.fillText(restartText, middlePointInX, middlePointInY);
+      this.ctx.fillText(quitText, middlePointInX, middlePointInY + 60);
+
       this.buttons.restart = {
-        x: centerWordX,
-        y: this.ctx.canvas.height / 2 - fontSize,
-        width: fontSize * "Restart".length,
+        x: middlePointInX - restartTextWidth / 2,
+        y: middlePointInY - fontSize,
+        width: restartTextWidth,
         height: fontSize,
       };
+
       this.buttons.quit = {
-        x: centerWordX,
-        y: this.ctx.canvas.height / 2 + 60 - fontSize,
-        width: fontSize * "Quit".length,
+        x: middlePointInX - quitTextWidth / 2,
+        y: middlePointInY + 60 - fontSize,
+        width: quitTextWidth,
         height: fontSize,
       };
     }

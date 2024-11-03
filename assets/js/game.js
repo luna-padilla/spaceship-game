@@ -18,6 +18,7 @@ class Game {
     this.audio.play();
     this.menu.gameState = "playing";
     let tick = 0;
+
     this.interval = setInterval(() => {
       this.clear();
       this.draw();
@@ -27,6 +28,7 @@ class Game {
         });
         this.ship.checkCollision(this);
         this.enemy.checkHitByShipShoot(this.ship, this);
+
         this.ship.enemies.forEach((enemy) => {
           enemy.checkShootEnemy(this);
         });
@@ -34,7 +36,7 @@ class Game {
         this.enemy.checkShootEnemy(this);
         this.move();
         this.ship.displayScoreAndLives();
-        
+
         tick++;
         if (tick >= 60) {
           tick = 0;
@@ -107,9 +109,14 @@ class Game {
       })
     );
     if (this.menu.gameState !== "playing") {
-      this.menu.drawMenu(); // Dibuja el menú en los estados pausado y gameOver
+      this.menu.drawMenu(); // Dibuja el menú en los estados pausado, Al inicio y gameOver
     }
-    this.powerUp.draw();
+    if (
+      this.ship.counterKilledEnemy % 5 == 0 &&
+      this.ship.counterKilledEnemy !== 0
+    ) {
+      this.powerUp.draw();
+    }
   }
 
   move() {
@@ -134,6 +141,8 @@ class Game {
         return !shoot.isOut();
       });
     });
-    this.powerUp.move();
+    if (this.ship.counterKilledEnemy % 5 == 0) {
+      this.powerUp.move();
+    }
   }
 }

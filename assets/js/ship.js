@@ -7,7 +7,7 @@ class Ship {
     this.vx = 0;
     this.width = 75;
     this.height = 26;
-    this.lives = 3;
+    this.lives = 30;
     this.score = 0;
     this.lastShotTime = 0; // Tiempo del último disparo
     this.shootCooldown = 250; // 1000 ms = 1 segundo
@@ -20,7 +20,7 @@ class Ship {
     this.spriteSheet.frames = 2;
     this.spriteSheet.frameIndex = 0;
     this.tick = 0;
-    this.counter=0;
+    this.counterKilledEnemy=0;
   }
 
   addScore() {
@@ -150,6 +150,7 @@ class Ship {
     this.ctx.fillStyle = "white";
     this.ctx.fillText(`Score: ${this.score}`, 10, 20);
     this.ctx.fillText(`Lives: ${this.lives}`, 120, 20);
+    this.ctx.fillText(`Enemies: ${this.counterKilledEnemy}`, 180, 20);
   }
 
   checkCollision(game) {
@@ -178,7 +179,7 @@ class Ship {
     });
   }
   addCounter(){
-    this.counter++;
+    this.counterKilledEnemy++;
   } 
 
 

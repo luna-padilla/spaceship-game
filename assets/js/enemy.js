@@ -10,7 +10,8 @@ class Enemy {
       Math.floor(
         Math.random() * (this.ctx.canvas.height - this.height - 2 * margin)
       ) + margin;
-    this.vx = Math.floor(Math.random() * 3) - 6;
+    this.vx = Math.floor(Math.random() * 3) - 4;
+    
 
     this.img = new Image();
 
@@ -22,7 +23,7 @@ class Enemy {
     this.img.src =
       this.enemyImages[Math.floor(Math.random() * this.enemyImages.length)]; // Selecciona una imagen aleatoria del arreglo
     this.lastShotTime = 0; // Tiempo del último disparo
-    this.shootCooldown = 1000; // 1000 ms = 1 segundo
+    this.shootCooldown = 1600; // 1000 ms = 1 segundo
     this.shoots = [];
   }
 
@@ -63,7 +64,6 @@ class Enemy {
   }
 
   checkHitByShipShoot(ship, game) {
-   
     // Recorre cada disparo de la nave
     for (let i = ship.shoots.length - 1; i >= 0; i--) {
       const shoot = ship.shoots[i];
@@ -77,6 +77,11 @@ class Enemy {
           shoot.y + shoot.height > enemie.y
         ) {
           ship.addCounter();
+          if (ship.counterKilledEnemy % 5 == 0) {
+            game.powerUp.x = enemie.x;
+            game.powerUp.y = enemie.y;
+            
+          }
           // Puedes reducir la vida del enemigo o dar puntos al jugador aquí
           // ship.addScore();
           game.explosion.x = enemie.x;
@@ -110,7 +115,7 @@ class Enemy {
         shoot.y + shoot.height > game.ship.y
       ) {
         game.ship.activateInvulnerability();
-        
+
         game.ship.reduceLives(); // Reduce la puntuación
         if (this.lives <= 0) {
           game.gameOver();
@@ -140,7 +145,13 @@ class Enemy {
       // Solo dispara si ha pasado el tiempo de cooldown
 
       this.shoots.push(
-        new Shoot(this.ctx, this.x - 46, this.y + this.height / 2, -10,"/assets/images/laser-enemigo.png")
+        new Shoot(
+          this.ctx,
+          this.x - 46,
+          this.y + this.height / 2,
+          -10,
+          "/assets/images/laser-enemigo.png"
+        )
       );
       this.lastShotTime = currentTime; // Actualiza el tiempo del último disparo
     }

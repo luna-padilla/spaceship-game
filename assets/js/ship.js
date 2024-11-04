@@ -1,29 +1,24 @@
-class Ship {
-  constructor(ctx) {
+class Ship  extends GameObject{
+  constructor(ctx, positionComponent, velocityComponent) {
+    super(positionComponent, velocityComponent);
     this.ctx = ctx;
-    this.position = new PositionComponent(40, this.ctx.canvas.height / 2);
-    this.velocity = new VelocityComponent(0, 0);
     this.playerStats = new PlayerStats(ctx, 3);
-
     this.width = 75;
     this.height = 26;
-    // this.lives = 3;
-    // this.score = 0;
     this.lastShotTime = 0; // Tiempo del último disparo
     this.shootCooldown = 250; // 1000 ms = 1 segundo
-    
     this.shoots = [];
-    
+
     this.invulnerable = false;
     this.invulnerableTimeout = 1000;
-    
+
     this.spriteSheet = new Image();
     this.spriteSheet.src = "/assets/images/nave-modificado-tamano.png";
     this.spriteSheet.frames = 2;
     this.spriteSheet.frameIndex = 0;
-    
+
     this.enemies = [new Enemy(ctx)];
-    
+
     this.tick = 0;
     this.counterKilledEnemy = 0;
   }
@@ -35,9 +30,12 @@ class Ship {
       this.shoots.push(
         new Shoot(
           this.ctx,
-          this.position.x + this.width - 10,
-          this.position.y + this.height / 2,
-          10,
+          new PositionComponent(
+            this.position.x + this.width - 10,
+            this.position.y + this.height / 2
+          ),
+          new VelocityComponent(10, 0),
+
           "/assets/images/laser-2.png"
         )
       );
@@ -136,8 +134,6 @@ class Ship {
     });
   }
 
-  
-
   checkCollision(game) {
     if (this.invulnerable) return;
     this.enemies.forEach((enemy, index) => {
@@ -156,7 +152,7 @@ class Ship {
           game.explosion.explosionVisible = false; // Oculta la explosión después del tiempo definido
         }, game.explosion.explosionDuration);
         this.playerStats.reduceLives(); // Pierde una vida al colisionar
-        if (this.playerStats.isGameOver() ) {
+        if (this.playerStats.isGameOver()) {
           game.gameOver();
         }
         this.activateInvulnerability();

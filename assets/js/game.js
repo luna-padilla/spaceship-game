@@ -1,7 +1,11 @@
 class Game {
   constructor(ctx) {
     this.ctx = ctx;
-    this.ship = new Ship(ctx);
+    this.ship = new Ship(
+      ctx,
+      new PositionComponent(40, this.ctx.canvas.height / 2),
+      new VelocityComponent(0, 0)
+    );
     this.ship.handleShipControls();
     this.background = new Background(ctx);
     this.explosion = new Explosion(ctx);

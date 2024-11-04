@@ -1,17 +1,15 @@
-class Shoot {
-  constructor(ctx, x, y, speed, src) {
+class Shoot extends GameObject {
+  constructor(ctx, positionComponent, velocityComponent, src) {
+    super(positionComponent, velocityComponent);
     this.ctx = ctx;
-    this.x = x;
-    this.y = y;
-    this.speed = speed;
     this.width = 126;
     this.height = 81;
     this.spriteSheet = new Image();
-    this.spriteSheet.src = "/assets/images/plasm.png";
+    this.spriteSheet.src = src;
   }
 
   move() {
-    this.x += this.speed;
+    this.velocity.update(this.position);
   }
 
   draw() {
@@ -25,8 +23,8 @@ class Shoot {
       spriteY, // Coordenadas de la esquina superior izquierda del sprite en la hoja
       this.width,
       this.height, // Ancho y alto del sprite en la hoja
-      this.x,
-      this.y, // Coordenadas donde se dibujará el sprite en el canvas
+      this.position.x,
+      this.position.y, // Coordenadas donde se dibujará el sprite en el canvas
       this.width / 3,
       this.height / 3 // Ancho y alto del sprite al dibujarlo
     );
@@ -34,7 +32,7 @@ class Shoot {
 
   isOut() {
     let fuera = false;
-    if (this.x + this.width < 0) {
+    if (this.position.x + this.width < 0) {
       fuera = true;
       return fuera;
     }

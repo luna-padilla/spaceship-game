@@ -70,10 +70,10 @@ class Enemy {
         const enemie = ship.enemies[j];
         // Verifica si el disparo ha colisionado con el enemigo
         if (
-          shoot.x < enemie.x + enemie.w &&
-          shoot.x + shoot.width > enemie.x &&
-          shoot.y < enemie.y + enemie.height &&
-          shoot.y + shoot.height > enemie.y
+          shoot.position.x < enemie.x + enemie.w &&
+          shoot.position.x + shoot.width > enemie.x &&
+          shoot.position.y < enemie.y + enemie.height &&
+          shoot.position.y + shoot.height > enemie.y
         ) {
           ship.addCounter();
           if (
@@ -84,7 +84,7 @@ class Enemy {
             game.powerUp.y = enemie.y;
           }
           // Puedes reducir la vida del enemigo o dar puntos al jugador aquí
-      
+
           game.explosion.x = enemie.x;
           game.explosion.y = enemie.y;
           game.explosion.explosionVisible = true;
@@ -110,10 +110,10 @@ class Enemy {
 
       // Verifica la colisión entre el disparo del enemigo y la nave del jugador
       if (
-        shoot.x < game.ship.position.x + game.ship.width &&
-        shoot.x + shoot.width > game.ship.position.x &&
-        shoot.y < game.ship.position.y + game.ship.height &&
-        shoot.y + shoot.height > game.ship.position.y
+        shoot.position.x < game.ship.position.x + game.ship.width &&
+        shoot.position.x + shoot.width > game.ship.position.x &&
+        shoot.position.y < game.ship.position.y + game.ship.height &&
+        shoot.position.y + shoot.height > game.ship.position.y
       ) {
         game.ship.activateInvulnerability();
 
@@ -148,9 +148,8 @@ class Enemy {
       this.shoots.push(
         new Shoot(
           this.ctx,
-          this.x - 46,
-          this.y + this.height / 2,
-          -5,
+          new PositionComponent(this.x - 46, this.y + this.height / 2),
+          new VelocityComponent(-5, 0),
           "/assets/images/laser-enemigo.png"
         )
       );

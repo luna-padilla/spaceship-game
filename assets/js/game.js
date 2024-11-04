@@ -12,7 +12,16 @@ class Game {
     this.enemy = new Enemy(ctx);
     this.menu = new Menu(ctx);
     this.menu.handleKeypresses(this);
-    this.powerUp = new PowerUp(ctx);
+    this.powerUp = new PowerUp(
+      ctx,
+      new PositionComponent(
+        this.ctx.canvas.width - 50,
+        Math.floor(
+          Math.random() * (this.ctx.canvas.height - this.height - 2 * 50)
+        )
+      ),
+      new VelocityComponent(-1, 0)
+    );
     this.audio = new Audio("/assets/audio/Space Heroes.ogg");
     this.audio.volume = 0.05;
     this.interval = null;

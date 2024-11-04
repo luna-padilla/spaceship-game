@@ -1,14 +1,16 @@
-class PowerUp {
-  constructor(ctx) {
+class PowerUp extends GameObject {
+  constructor(ctx, postionComponent, velocityComponent) {
+    super(postionComponent, velocityComponent);
     this.ctx = ctx;
-    this.x = this.ctx.canvas.width - 50;
+    // this.position.x = this.ctx.canvas.width - 50;
+
     this.width = 87;
     this.height = 87;
-    this.vx = -1;
+    // this.velocity.x = -1;
     const margin = 50; // Ajusta este valor según tus necesidades
-    this.y = Math.floor(
-      Math.random() * (this.ctx.canvas.height - this.height - 2 * margin)
-    );
+    // this.position.y = Math.floor(
+    //   Math.random() * (this.ctx.canvas.height - this.height - 2 * margin)
+    // );
 
     this.img = new Image();
     this.img.src = "/assets/images/bonus_life.png";
@@ -35,8 +37,9 @@ class PowerUp {
       0,
       this.width,
       this.height,
-      this.x,
-      this.y,
+      this.position.x,
+      this.position.y,
+
       this.width / 3,
       this.height / 3
     );
@@ -44,19 +47,19 @@ class PowerUp {
   }
 
   move() {
-    this.x += this.vx;
-    if (this.y < 0) {
-      this.y = 0;
+    this.position.x += this.velocity.vx;
+    if (this.position.y < 0) {
+      this.position.y = 0;
     }
 
-    if (this.y + this.height > this.ctx.canvas.height) {
-      this.y = this.ctx.canvas.height - this.height;
+    if (this.position.y + this.height > this.ctx.canvas.height) {
+      this.position.y = this.ctx.canvas.height - this.height;
     }
   }
 
   isOut() {
     let fuera = false;
-    if (this.x + this.w < 0) {
+    if (this.position.x + this.w < 0) {
       fuera = true;
       return fuera;
     }
@@ -67,19 +70,19 @@ class PowerUp {
     this.blinking = true;
     setTimeout(() => {
       this.blinking = false;
-      this.x = -1000;
+      this.position.x = -1000;
     }, this.blinkingTimeout);
   }
 
   checkCollision(ship) {
     if (
-      this.x < ship.position.x + ship.width &&
-      this.x + this.width > ship.position.x &&
-      this.y < ship.position.y + ship.height &&
-      this.y + this.height > ship.position.y
+      this.position.x < ship.position.x + ship.width &&
+      this.position.x + this.width > ship.position.x &&
+      this.position.y < ship.position.y + ship.height &&
+      this.position.y + this.height > ship.position.y
     ) {
       ship.playerStats.addLives();
-      this.x = -1000;
+      this.position.x = -1000;
     }
   }
 }

@@ -80,8 +80,8 @@ class Enemy {
             ship.counterKilledEnemy % 2 == 0 &&
             ship.counterKilledEnemy !== 0
           ) {
-            game.powerUp.x = enemie.x;
-            game.powerUp.y = enemie.y;
+            game.powerUp.position.x = enemie.x;
+            game.powerUp.position.y = enemie.y;
           }
           // Puedes reducir la vida del enemigo o dar puntos al jugador aquí
 

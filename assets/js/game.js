@@ -27,6 +27,7 @@ class Game {
           enemy.addShoot();
         });
         this.ship.checkCollision(this);
+        this.powerUp.checkCollision(this.ship);
         this.enemy.checkHitByShipShoot(this.ship, this);
 
         this.ship.enemies.forEach((enemy) => {
@@ -35,11 +36,12 @@ class Game {
 
         this.enemy.checkShootEnemy(this);
         this.move();
-        this.ship.displayScoreAndLives();
+        this.ship.playerStats.displayStats();
 
         tick++;
-        if (tick >= 60) {
+        if (tick >= 200) {
           tick = 0;
+          this.addEnemy();
           this.addEnemy();
         }
       }
@@ -68,14 +70,14 @@ class Game {
   restart() {
     this.ship.enemies = [new Enemy(this.ctx)];
     this.menu.gameState = "playing";
-    this.ship.restart();
+    this.ship.playerStats.restart();
     this.start();
   }
 
   endGame() {
     this.audio.pause();
     clearInterval(this.interval);
-    this.ship.restart();
+    this.ship.playerStats.restart();
     this.ship.enemies = [new Enemy(this.ctx)];
     this.menu.gameState = "menu";
     this.menu.drawMenu();
@@ -112,7 +114,7 @@ class Game {
       this.menu.drawMenu(); // Dibuja el menú en los estados pausado, Al inicio y gameOver
     }
     if (
-      this.ship.counterKilledEnemy % 5 == 0 &&
+      this.ship.counterKilledEnemy % 2 == 0 &&
       this.ship.counterKilledEnemy !== 0
     ) {
       this.powerUp.draw();
@@ -141,10 +143,11 @@ class Game {
         return !shoot.isOut();
       });
     });
-    if (this.ship.counterKilledEnemy % 5 == 0) {
-
+    if (
+      this.ship.counterKilledEnemy % 2 == 0 &&
+      this.ship.counterKilledEnemy !== 0
+    ) {
       this.powerUp.move();
-    
     }
   }
 }

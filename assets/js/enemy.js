@@ -11,7 +11,7 @@ class Enemy {
         Math.random() * (this.ctx.canvas.height - this.height - 2 * margin)
       ) + margin;
     this.vx = Math.floor(Math.random() * 3) - 5;
-
+    this.vx = -2;
     this.img = new Image();
 
     this.enemyImages = [
@@ -22,7 +22,7 @@ class Enemy {
     this.img.src =
       this.enemyImages[Math.floor(Math.random() * this.enemyImages.length)]; // Selecciona una imagen aleatoria del arreglo
     this.lastShotTime = 0; // Tiempo del último disparo
-    this.shootCooldown = 1600; // 1000 ms = 1 segundo
+    this.shootCooldown = 2000; // 1000 ms = 1 segundo
     this.shoots = [];
   }
 
@@ -76,13 +76,15 @@ class Enemy {
           shoot.y + shoot.height > enemie.y
         ) {
           ship.addCounter();
-          if (ship.counterKilledEnemy % 5 == 0) {
+          if (
+            ship.counterKilledEnemy % 2 == 0 &&
+            ship.counterKilledEnemy !== 0
+          ) {
             game.powerUp.x = enemie.x;
             game.powerUp.y = enemie.y;
-            
           }
           // Puedes reducir la vida del enemigo o dar puntos al jugador aquí
-          // ship.addScore();
+      
           game.explosion.x = enemie.x;
           game.explosion.y = enemie.y;
           game.explosion.explosionVisible = true;
@@ -108,20 +110,20 @@ class Enemy {
 
       // Verifica la colisión entre el disparo del enemigo y la nave del jugador
       if (
-        shoot.x < game.ship.x + game.ship.width &&
-        shoot.x + shoot.width > game.ship.x &&
-        shoot.y < game.ship.y + game.ship.height &&
-        shoot.y + shoot.height > game.ship.y
+        shoot.x < game.ship.position.x + game.ship.width &&
+        shoot.x + shoot.width > game.ship.position.x &&
+        shoot.y < game.ship.position.y + game.ship.height &&
+        shoot.y + shoot.height > game.ship.position.y
       ) {
         game.ship.activateInvulnerability();
 
-        game.ship.reduceLives(); // Reduce la puntuación
-        if (this.lives <= 0) {
+        game.ship.playerStats.reduceLives(); // Reduce la puntuación
+        if (game.ship.playerStats.isGameOver()) {
           game.gameOver();
         }
         // Explosión en la posición del enemigo
-        game.explosion.x = game.ship.x + 45;
-        game.explosion.y = game.ship.y;
+        game.explosion.x = game.ship.position.x + 45;
+        game.explosion.y = game.ship.position.y;
         game.explosion.explosionVisible = true;
 
         setTimeout(() => {
@@ -148,7 +150,7 @@ class Enemy {
           this.ctx,
           this.x - 46,
           this.y + this.height / 2,
-          -10,
+          -5,
           "/assets/images/laser-enemigo.png"
         )
       );

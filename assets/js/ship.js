@@ -1,39 +1,31 @@
 class Ship {
   constructor(ctx) {
     this.ctx = ctx;
-    this.x = 40;
-    this.y = this.ctx.canvas.height / 2;
-    this.vy = 0;
-    this.vx = 0;
+    this.position = new PositionComponent(40, this.ctx.canvas.height / 2);
+    this.velocity = new VelocityComponent(0, 0);
+    this.playerStats = new PlayerStats(ctx, 3);
+
     this.width = 75;
     this.height = 26;
-    this.lives = 3;
-    this.score = 0;
+    // this.lives = 3;
+    // this.score = 0;
     this.lastShotTime = 0; // Tiempo del último disparo
     this.shootCooldown = 250; // 1000 ms = 1 segundo
+    
     this.shoots = [];
+    
     this.invulnerable = false;
     this.invulnerableTimeout = 1000;
+    
     this.spriteSheet = new Image();
     this.spriteSheet.src = "/assets/images/nave-modificado-tamano.png";
-    this.enemies = [new Enemy(ctx)];
     this.spriteSheet.frames = 2;
     this.spriteSheet.frameIndex = 0;
+    
+    this.enemies = [new Enemy(ctx)];
+    
     this.tick = 0;
-    this.counterKilledEnemy=0;
-  }
-
-  addScore() {
-    this.score += 10;
-  }
-
-  reduceLives() {
-    this.lives--;
-  }
-
-  restart() {
-    this.lives = 3;
-    this.score = 0;
+    this.counterKilledEnemy = 0;
   }
 
   addShoot() {
@@ -43,8 +35,8 @@ class Ship {
       this.shoots.push(
         new Shoot(
           this.ctx,
-          this.x + this.width - 10,
-          this.y + this.height / 2,
+          this.position.x + this.width - 10,
+          this.position.y + this.height / 2,
           10,
           "/assets/images/laser-2.png"
         )
@@ -54,20 +46,19 @@ class Ship {
   }
 
   move() {
-    this.x += this.vx;
-    this.y += this.vy;
-    if (this.x < 0) {
-      this.x = 0;
+    this.velocity.update(this.position);
+    if (this.position.x < 0) {
+      this.position.x = 0;
     }
-    if (this.x + this.width > this.ctx.canvas.width) {
-      this.x = this.ctx.canvas.width - this.width ;
+    if (this.position.x + this.width > this.ctx.canvas.width) {
+      this.position.x = this.ctx.canvas.width - this.width;
     }
-    if (this.y < 0) {
-      this.y = 0;
+    if (this.position.y < 0) {
+      this.position.y = 0;
     }
 
-    if (this.y + this.height  > this.ctx.canvas.height) {
-      this.y = this.ctx.canvas.height - this.height ;
+    if (this.position.y + this.height > this.ctx.canvas.height) {
+      this.position.y = this.ctx.canvas.height - this.height;
     }
   }
 
@@ -87,8 +78,8 @@ class Ship {
       spriteY, // Coordenadas de la esquina superior izquierda del sprite en la hoja
       this.width,
       this.height, // Ancho y alto del sprite en la hoja
-      this.x,
-      this.y, // Coordenadas donde se dibujará el sprite en el canvas
+      this.position.x,
+      this.position.y, // Coordenadas donde se dibujará el sprite en el canvas
       this.width,
       this.height // Ancho y alto del sprite al dibujarlo
     );
@@ -98,16 +89,16 @@ class Ship {
   onKeyDown(code) {
     switch (code) {
       case KEY_RIGHT:
-        this.vx = 5;
+        this.velocity.vx = 5;
         break;
       case KEY_UP:
-        this.vy = -5;
+        this.velocity.vy = -5;
         break;
       case KEY_LEFT:
-        this.vx = -5;
+        this.velocity.vx = -5;
         break;
       case KEY_DOWN:
-        this.vy = 5;
+        this.velocity.vy = 5;
         break;
     }
   }
@@ -116,11 +107,11 @@ class Ship {
     switch (code) {
       case KEY_RIGHT:
       case KEY_LEFT:
-        this.vx = 0;
+        this.velocity.vx = 0;
         break;
       case KEY_UP:
       case KEY_DOWN:
-        this.vy = 0;
+        this.velocity.vy = 0;
         break;
     }
   }
@@ -145,42 +136,34 @@ class Ship {
     });
   }
 
-  displayScoreAndLives() {
-    this.ctx.font = "10px 'Press Start 2P'";
-    this.ctx.fillStyle = "white";
-    this.ctx.fillText(`Score: ${this.score}`, 50, 20);
-    this.ctx.fillText(`Lives: ${this.lives}`, 140, 20);
-  }
+  
 
   checkCollision(game) {
     if (this.invulnerable) return;
     this.enemies.forEach((enemy, index) => {
       if (
-        this.x < enemy.x + enemy.w &&
-        this.x + this.width > enemy.x &&
-        this.y < enemy.y + enemy.height &&
-        this.y + this.height > enemy.y
+        this.position.x < enemy.x + enemy.w &&
+        this.position.x + this.width > enemy.x &&
+        this.position.y < enemy.y + enemy.height &&
+        this.position.y + this.height > enemy.y
       ) {
         // Almacena la posición de la explosión y actívala
-        game.explosion.x = this.x + this.width - 35;
-        game.explosion.y = this.y - this.height + 20;
+        game.explosion.x = this.position.x + this.width - 35;
+        game.explosion.y = this.position.y - this.height + 20;
         game.explosion.explosionVisible = true;
         this.enemies.splice(index, 1);
         setTimeout(() => {
           game.explosion.explosionVisible = false; // Oculta la explosión después del tiempo definido
         }, game.explosion.explosionDuration);
-        this.reduceLives(); // Pierde una vida al colisionar
-        if (this.lives <= 0) {
+        this.playerStats.reduceLives(); // Pierde una vida al colisionar
+        if (this.playerStats.isGameOver() ) {
           game.gameOver();
         }
         this.activateInvulnerability();
       }
     });
   }
-  addCounter(){
+  addCounter() {
     this.counterKilledEnemy++;
-  } 
-
-
-
+  }
 }

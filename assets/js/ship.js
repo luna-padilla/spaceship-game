@@ -1,8 +1,10 @@
-class Ship  extends GameObject{
+class Ship extends GameObject {
   constructor(ctx, positionComponent, velocityComponent) {
     super(positionComponent, velocityComponent);
     this.ctx = ctx;
-    this.playerStats = new PlayerStats(ctx, 3);
+    this.acceleration = 10; // Tasa de incremento de velocidad
+    this.maxSpeed = 10; // Velocidad máxima
+    this.playerStats = new PlayerStats(ctx, 300);
     this.width = 75;
     this.height = 26;
     this.lastShotTime = 0; // Tiempo del último disparo
@@ -44,6 +46,8 @@ class Ship  extends GameObject{
   }
 
   move() {
+    this.velocity.vx *= 0.98; // Factor de fricción
+    this.velocity.vy *= 0.98;
     this.velocity.update(this.position);
     if (this.position.x < 0) {
       this.position.x = 0;
@@ -87,16 +91,38 @@ class Ship  extends GameObject{
   onKeyDown(code) {
     switch (code) {
       case KEY_RIGHT:
-        this.velocity.vx = 5;
+        this.velocity.vx = Math.min(
+          this.velocity.vx + this.acceleration,
+          this.maxSpeed
+        );
         break;
       case KEY_UP:
-        this.velocity.vy = -5;
+        this.velocity.vy = Math.max(
+          this.velocity.vy - this.acceleration,
+          -this.maxSpeed
+        );
         break;
       case KEY_LEFT:
-        this.velocity.vx = -5;
+        this.velocity.vx = Math.max(
+          this.velocity.vx - this.acceleration,
+          -this.maxSpeed
+        );
         break;
       case KEY_DOWN:
-        this.velocity.vy = 5;
+        this.velocity.vy = Math.min(
+          this.velocity.vy + this.acceleration,
+          this.maxSpeed
+        );
+        break;
+
+      case KEY_SHIFT: // Tecla Shift para dash
+        this.velocity.vx *= 2; // Duplica la velocidad en el eje X
+        this.velocity.vy *= 2; // Duplica la velocidad en el eje Y
+        setTimeout(() => {
+          // Después de un breve momento, vuelve la velocidad a la normalidad
+          this.velocity.vx /= 2;
+          this.velocity.vy /= 2;
+        }, 200); // Duración del dash en milisegundos
         break;
     }
   }

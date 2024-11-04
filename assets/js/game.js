@@ -52,7 +52,7 @@ class Game {
         this.ship.playerStats.displayStats();
 
         tick++;
-        if (tick >= 200) {
+        if (tick >= 800) {
           tick = 0;
           this.addEnemy();
           this.addEnemy();

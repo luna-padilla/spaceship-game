@@ -4,16 +4,16 @@ class Enemy {
     this.w = 52;
     this.height = 46;
     this.x = Math.random() * (this.ctx.canvas.width - this.w); // Posición aleatoria en el eje X
-    this.y = -this.height ; // Aparece justo fuera de la parte superior del canvas
+    this.y = -this.height; // Aparece justo fuera de la parte superior del canvas
     this.vx = 0; // No se mueve horizontalmente
     this.vy = 2; // Velocidad hacia abajo para que se desplace hacia el jugador
 
     this.img = new Image();
     this.enemyImages = [
       "/assets/images/insect-1.png",
-      "/assets/images/insect-2.png"
+      "/assets/images/insect-2.png",
     ];
-    
+
     this.img.src =
       this.enemyImages[Math.floor(Math.random() * this.enemyImages.length)];
     this.lastShotTime = 0;
@@ -69,10 +69,9 @@ class Enemy {
           shoot.position.y + shoot.height > enemie.y
         ) {
           ship.addCounter();
-          if (
-            ship.counterKilledEnemy % 2 == 0 &&
-            ship.counterKilledEnemy !== 0
-          ) {
+
+          // Si el contador alcanza 3 o 4, generar un power-up
+          if (ship.counterKilledEnemy >= 5 && ship.counterKilledEnemy % 5 == 0) {
             game.powerUp.position.x = enemie.x;
             game.powerUp.position.y = enemie.y;
           }
@@ -82,7 +81,7 @@ class Enemy {
           game.explosion.x = enemie.x;
           game.explosion.y = enemie.y;
           game.explosion.explosionVisible = true;
-
+          game.explosion.soundExplosion();
           setTimeout(() => {
             game.explosion.explosionVisible = false; // Oculta la explosión después de explosionDuration
           }, game.explosion.explosionDuration);
@@ -119,7 +118,7 @@ class Enemy {
         game.explosion.x = game.ship.position.x;
         game.explosion.y = game.ship.position.y;
         game.explosion.explosionVisible = true;
-
+        game.explosion.soundExplosion();
         setTimeout(() => {
           game.explosion.explosionVisible = false; // Oculta la explosión después de explosionDuration
         }, game.explosion.explosionDuration);
@@ -140,7 +139,10 @@ class Enemy {
       this.shoots.push(
         new Shoot(
           this.ctx,
-          new PositionComponent(this.x + this.w / 2 -5, this.y + this.height/2), // Posición en la parte inferior del enemigo
+          new PositionComponent(
+            this.x + this.w / 2 - 5,
+            this.y + this.height / 2
+          ), // Posición en la parte inferior del enemigo
           new VelocityComponent(0, 5), // Velocidad hacia abajo
           "/assets/images/bullet-1.png"
         )

@@ -9,6 +9,17 @@ class Explosion {
     this.height = 18;
     this.spriteSheet = new Image();
     this.spriteSheet.src = "/assets/images/gradius.png";
+
+    this.explosionSound = new Audio(
+      "/assets/audio/Retro Explosion Short 15.wav"
+    );
+    this.explosionSound.volume = 0.15;
+  }
+
+  soundExplosion(){
+     // Reproduce el sonido de disparo
+     this.explosionSound.currentTime = 0; // Reinicia el sonido para permitir disparos rápidos
+     this.explosionSound.play();
   }
 
   draw(x,y) {

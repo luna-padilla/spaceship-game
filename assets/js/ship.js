@@ -4,11 +4,11 @@ class Ship extends GameObject {
     this.ctx = ctx;
     this.acceleration = 10; // Tasa de incremento de velocidad
     this.maxSpeed = 10; // Velocidad máxima
-    this.playerStats = new PlayerStats(ctx, 5);
+    this.playerStats = new PlayerStats(ctx, 10);
     this.width = 48;
     this.height = 46;
     this.lastShotTime = 0; // Tiempo del último disparo
-    this.shootCooldown = 250; // Cooldown para disparar
+    this.shootCooldown = 20; // Cooldown para disparar
     this.shoots = [];
 
     this.invulnerable = false;
@@ -23,6 +23,11 @@ class Ship extends GameObject {
 
     this.tick = 0;
     this.counterKilledEnemy = 0;
+
+    this.shootSound = new Audio(
+      "/assets/audio/Retro Gun Laser SingleShot 01.wav"
+    );
+    this.shootSound.volume = 0.15;
   }
 
   addShoot() {
@@ -41,8 +46,11 @@ class Ship extends GameObject {
           "/assets/images/plasm.png"
         )
       );
+      // Reproduce el sonido de disparo
+      this.shootSound.currentTime = 0; // Reinicia el sonido para permitir disparos rápidos
+      this.shootSound.play();
 
-      this.lastShotTime = currentTime; // Actualiza el tiempo del último disparo
+      this.lastShotTime = currentTime;
     }
   }
 
@@ -165,6 +173,8 @@ class Ship extends GameObject {
         game.explosion.x = this.position.x;
         game.explosion.y = this.position.y;
         game.explosion.explosionVisible = true;
+        game.explosion.soundExplosion();
+        
         this.enemies.splice(index, 1);
         setTimeout(() => {
           game.explosion.explosionVisible = false; // Oculta la explosión después del tiempo definido

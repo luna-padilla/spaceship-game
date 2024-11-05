@@ -18,7 +18,18 @@ class PowerUp extends GameObject {
     this.blinking = false;
     this.blinkingTimeout = 1000;
     this.timeoutId;
+
+    this.powerupSound = new Audio(
+      "/assets/audio/Retro PowerUP 09.wav"
+    );
+    this.powerupSound.volume = 0.15;
   }
+
+  soundPowerup(){
+    // Reproduce el sonido de disparo
+    this.powerupSound.currentTime = 0; // Reinicia el sonido para permitir disparos rápidos
+    this.powerupSound.play();
+ }
 
   draw() {
     this.tick++;
@@ -83,6 +94,7 @@ class PowerUp extends GameObject {
     ) {
       ship.playerStats.addLives();
       this.position.x = -1000;
+      this.soundPowerup();
     }
   }
 }

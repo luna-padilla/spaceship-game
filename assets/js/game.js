@@ -15,17 +15,43 @@ class Game {
     this.powerUp = new PowerUp(
       ctx,
       new PositionComponent(
-        this.ctx.canvas.width - 50,
-        Math.floor(
-          Math.random() * (this.ctx.canvas.height - this.height - 2 * 50)
-        )
+        -200,
+       -200
       ),
       new VelocityComponent(-1, 0)
     );
-    
+
     this.audio = new Audio("/assets/audio/Space Heroes.ogg");
     this.audio.volume = 0.05;
     this.interval = null;
+  }
+
+
+  generateHorde() {
+    const enemyCountPerRow = 2; // Número de enemigos por fila
+    const rowSpacing = 80; // Espacio entre filas
+    const columnSpacing = 60; // Espacio entre columnas
+    const startY = -50; // Posición Y inicial (fuera de pantalla)
+    const totalEnemies = 4; // Número total de enemigos por horda (3 por cada lado)
+    const canvasMidpoint = this.ctx.canvas.width / 2; // Generar enemigos desde el lado izquierdo hacia el centro
+
+    for (let i = 0; i < totalEnemies / 2; i++) {
+      const x = Math.random() * (canvasMidpoint / 2); // Posición aleatoria en la mitad izquierda
+      const y = startY - i * rowSpacing; // Espaciado vertical
+      const enemy = new Enemy(this.ctx);
+      enemy.x = x;
+      enemy.y = y;
+      this.ship.enemies.push(enemy);
+    } // Generar enemigos desde el lado derecho hacia el centro
+
+    for (let i = 0; i < totalEnemies / 2; i++) {
+      const x = canvasMidpoint + Math.random() * (canvasMidpoint / 2); // Posición aleatoria en la mitad derecha
+      const y = startY - i * rowSpacing; // Espaciado vertical
+      const enemy = new Enemy(this.ctx);
+      enemy.x = x;
+      enemy.y = y;
+      this.ship.enemies.push(enemy);
+    }
   }
 
   start() {
@@ -53,12 +79,9 @@ class Game {
         this.ship.playerStats.displayStats();
 
         tick++;
-        if (tick >= 200) {
+        if (tick >= 400) {
           tick = 0;
-          for (let index = 0; index <= Math.floor(Math.random() * 6) + 3; index++) {
-            this.addEnemy();
-          }
-          
+          this.generateHorde();
         }
       }
     }, 1000 / 60);
@@ -123,19 +146,15 @@ class Game {
     });
     this.ship.enemies.forEach((enemy) =>
       enemy.shoots.forEach((shoot) => {
-
         shoot.draw();
       })
     );
     if (this.menu.gameState !== "playing") {
       this.menu.drawMenu(); // Dibuja el menú en los estados pausado, Al inicio y gameOver
     }
-    if (
-      this.ship.counterKilledEnemy % 2 == 0 &&
-      this.ship.counterKilledEnemy !== 0
-    ) {
-      this.powerUp.draw();
-    }
+
+    if (this.ship.counterKilledEnemy >= 5 && this.ship.counterKilledEnemy % 5 == 0)
+    this.powerUp.draw();
   }
 
   move() {
@@ -160,11 +179,7 @@ class Game {
         return !shoot.isOut();
       });
     });
-    if (
-      this.ship.counterKilledEnemy % 2 == 0 &&
-      this.ship.counterKilledEnemy !== 0
-    ) {
-      this.powerUp.move();
-    }
+    if (this.ship.counterKilledEnemy >= 5 && this.ship.counterKilledEnemy % 5 == 0)
+    this.powerUp.move();
   }
 }

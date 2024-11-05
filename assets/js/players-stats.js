@@ -3,6 +3,7 @@ class PlayerStats {
     this.ctx=ctx;
     this.lives = initialLives;
     this.score = initialScore;
+    this.killedEnemiesCount = 0; // Contador de enemigos eliminados
   }
 
   reduceLives() {
@@ -14,7 +15,27 @@ class PlayerStats {
   }
 
   addScore(points) {
-    this.score += points;
+    const multiplier = this.getScoreMultiplier(); // Obtener el multiplicador actual
+    this.score += points * multiplier;
+  }
+
+  getScoreMultiplier() {
+    if (this.killedEnemiesCount >= 10) {
+      return 3; // Triplica a partir de 10 enemigos
+    } else if (this.killedEnemiesCount >= 3) {
+      return 2; // Duplica a partir de 3 enemigos
+    }
+    return 1; // No se multiplica para menos de 3 enemigos
+  }
+
+  increaseKilledEnemies() {
+    this.killedEnemiesCount++; // Incrementa el contador de enemigos eliminados
+  }
+
+  resetStats() {
+    this.lives = 3;
+    this.score = 0;
+    this.killedEnemiesCount = 0; // Reinicia el contador de enemigos eliminados
   }
 
   restart() {

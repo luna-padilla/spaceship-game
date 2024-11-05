@@ -69,8 +69,10 @@ class Enemy {
           shoot.position.y + shoot.height > enemie.y
         ) {
           ship.addCounter();
-
-          // Si el contador alcanza 3 o 4, generar un power-up
+          ship.playerStats.increaseKilledEnemies(); // Incrementa el contador de enemigos
+          ship.playerStats.addScore(10);
+          
+          
           if (ship.counterKilledEnemy >= 5 && ship.counterKilledEnemy % 5 == 0) {
             game.powerUp.position.x = enemie.x;
             game.powerUp.position.y = enemie.y;

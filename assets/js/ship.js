@@ -4,7 +4,11 @@ class Ship extends GameObject {
     this.ctx = ctx;
     this.acceleration = 10; // Tasa de incremento de velocidad
     this.maxSpeed = 10; // Velocidad máxima
+
+    ////////////////////////////////////////////
+    // Aqui ctx , y vidas (10)
     this.playerStats = new PlayerStats(ctx, 10);
+
     this.width = 48;
     this.height = 46;
     this.lastShotTime = 0; // Tiempo del último disparo

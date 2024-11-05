@@ -146,7 +146,7 @@ class Enemy {
             this.y + this.height / 2
           ), // Posición en la parte inferior del enemigo
           new VelocityComponent(0, 5), // Velocidad hacia abajo
-          "assets/images/bullet-1.png"
+          "../images/bullet-2.png"
         )
       );
       this.lastShotTime = currentTime;

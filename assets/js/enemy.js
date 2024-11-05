@@ -1,38 +1,33 @@
 class Enemy {
   constructor(ctx) {
     this.ctx = ctx;
-    this.w = 64;
-    this.height = 32;
-    this.x = this.ctx.canvas.width - this.w - 20; // Posición inicial en el eje X
-    const margin = 50; // Ajusta este valor según tus necesidades
+    this.w = 52;
+    this.height = 46;
+    this.x = Math.random() * (this.ctx.canvas.width - this.w); // Posición aleatoria en el eje X
+    this.y = -this.height ; // Aparece justo fuera de la parte superior del canvas
+    this.vx = 0; // No se mueve horizontalmente
+    this.vy = 2; // Velocidad hacia abajo para que se desplace hacia el jugador
 
-    this.y =
-      Math.floor(
-        Math.random() * (this.ctx.canvas.height - this.height - 2 * margin)
-      ) + margin;
-    this.vx = Math.floor(Math.random() * 3) - 5;
-    this.vx = -2;
     this.img = new Image();
-
     this.enemyImages = [
-      // "/assets/images/small-A.png",
-      // "/assets/images/small-B.png", // Otra imagen de ejemplo
-      "/assets/images/naves-enemigas.png",
+      "/assets/images/insect-1.png",
+      "/assets/images/insect-2.png"
     ];
+    
     this.img.src =
-      this.enemyImages[Math.floor(Math.random() * this.enemyImages.length)]; // Selecciona una imagen aleatoria del arreglo
-    this.lastShotTime = 0; // Tiempo del último disparo
-    this.shootCooldown = 2000; // 1000 ms = 1 segundo
+      this.enemyImages[Math.floor(Math.random() * this.enemyImages.length)];
+    this.lastShotTime = 0;
+    this.shootCooldown = 2000;
     this.shoots = [];
   }
 
   draw() {
     this.ctx.drawImage(
       this.img,
-      150,
-      90,
-      62,
-      30,
+      0,
+      0,
+      this.w,
+      this.height,
       this.x,
       this.y,
       this.w,
@@ -41,15 +36,13 @@ class Enemy {
   }
 
   move() {
-    // Actualizar la posición X con la velocidad
-    this.x += this.vx;
+    // Actualizar la posición Y para que el enemigo baje
+    this.y += this.vy;
 
-    if (this.y < 0) {
-      this.y = 0;
-    }
-
-    if (this.y + this.height > this.ctx.canvas.height) {
-      this.y = this.ctx.canvas.height - this.height;
+    if (this.y > this.ctx.canvas.height) {
+      // Si el enemigo sale de la pantalla, podrías reiniciarlo o eliminarlo
+      this.y = -this.height; // Reinicia en la parte superior
+      this.x = Math.random() * (this.ctx.canvas.width - this.w); // Nueva posición X aleatoria
     }
   }
 
@@ -84,6 +77,7 @@ class Enemy {
             game.powerUp.position.y = enemie.y;
           }
           // Puedes reducir la vida del enemigo o dar puntos al jugador aquí
+          ship.playerStats.addScore(10);
 
           game.explosion.x = enemie.x;
           game.explosion.y = enemie.y;
@@ -122,7 +116,7 @@ class Enemy {
           game.gameOver();
         }
         // Explosión en la posición del enemigo
-        game.explosion.x = game.ship.position.x + 45;
+        game.explosion.x = game.ship.position.x;
         game.explosion.y = game.ship.position.y;
         game.explosion.explosionVisible = true;
 
@@ -141,19 +135,17 @@ class Enemy {
   }
 
   addShoot() {
-    const currentTime = Date.now(); // Obtiene el tiempo actual en milisegundos
+    const currentTime = Date.now();
     if (currentTime - this.lastShotTime >= this.shootCooldown) {
-      // Solo dispara si ha pasado el tiempo de cooldown
-
       this.shoots.push(
         new Shoot(
           this.ctx,
-          new PositionComponent(this.x - 46, this.y + this.height / 2),
-          new VelocityComponent(-5, 0),
-          "/assets/images/laser-enemigo.png"
+          new PositionComponent(this.x + this.w / 2 -5, this.y + this.height/2), // Posición en la parte inferior del enemigo
+          new VelocityComponent(0, 5), // Velocidad hacia abajo
+          "/assets/images/bullet-1.png"
         )
       );
-      this.lastShotTime = currentTime; // Actualiza el tiempo del último disparo
+      this.lastShotTime = currentTime;
     }
   }
 }

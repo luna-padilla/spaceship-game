@@ -4,7 +4,7 @@ class Explosion {
     this.explosionVisible = false; // Indica si la explosión es visible
     this.x = 0;
     this.y = 0;
-    this.explosionDuration = 300; // Duración en ms
+    this.explosionDuration = 375; // Duración en ms
     this.width = 15;
     this.height = 18;
     this.spriteSheet = new Image();
@@ -25,7 +25,7 @@ class Explosion {
       x,
       y, // Coordenadas donde se dibujará el sprite en el canvas
       this.width * 3,
-      this.height * 3// Ancho y alto del sprite al dibujarlo
+      this.height * 3 // Ancho y alto del sprite al dibujarlo
     );
   }
 }

@@ -22,6 +22,7 @@ class Game {
       ),
       new VelocityComponent(-1, 0)
     );
+    
     this.audio = new Audio("/assets/audio/Space Heroes.ogg");
     this.audio.volume = 0.05;
     this.interval = null;
@@ -52,10 +53,12 @@ class Game {
         this.ship.playerStats.displayStats();
 
         tick++;
-        if (tick >= 800) {
+        if (tick >= 200) {
           tick = 0;
-          this.addEnemy();
-          this.addEnemy();
+          for (let index = 0; index <= Math.floor(Math.random() * 6) + 3; index++) {
+            this.addEnemy();
+          }
+          
         }
       }
     }, 1000 / 60);
@@ -120,6 +123,7 @@ class Game {
     });
     this.ship.enemies.forEach((enemy) =>
       enemy.shoots.forEach((shoot) => {
+
         shoot.draw();
       })
     );

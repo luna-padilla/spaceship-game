@@ -2,8 +2,8 @@ class Shoot extends GameObject {
   constructor(ctx, positionComponent, velocityComponent, src) {
     super(positionComponent, velocityComponent);
     this.ctx = ctx;
-    this.width = 126;
-    this.height = 81;
+    this.width = 40;
+    this.height = 24;
     this.spriteSheet = new Image();
     this.spriteSheet.src = src;
   }
@@ -25,8 +25,8 @@ class Shoot extends GameObject {
       this.height, // Ancho y alto del sprite en la hoja
       this.position.x,
       this.position.y, // Coordenadas donde se dibujará el sprite en el canvas
-      this.width / 3,
-      this.height / 3 // Ancho y alto del sprite al dibujarlo
+      this.width ,
+      this.height // Ancho y alto del sprite al dibujarlo
     );
   }
 

@@ -4,18 +4,18 @@ class Ship extends GameObject {
     this.ctx = ctx;
     this.acceleration = 10; // Tasa de incremento de velocidad
     this.maxSpeed = 10; // Velocidad máxima
-    this.playerStats = new PlayerStats(ctx, 300);
-    this.width = 75;
-    this.height = 26;
+    this.playerStats = new PlayerStats(ctx, 5);
+    this.width = 48;
+    this.height = 46;
     this.lastShotTime = 0; // Tiempo del último disparo
-    this.shootCooldown = 250; // 1000 ms = 1 segundo
+    this.shootCooldown = 250; // Cooldown para disparar
     this.shoots = [];
 
     this.invulnerable = false;
     this.invulnerableTimeout = 1000;
 
     this.spriteSheet = new Image();
-    this.spriteSheet.src = "/assets/images/nave-modificado-tamano.png";
+    this.spriteSheet.src = "/assets/images/nave.png";
     this.spriteSheet.frames = 2;
     this.spriteSheet.frameIndex = 0;
 
@@ -29,18 +29,19 @@ class Ship extends GameObject {
     const currentTime = Date.now(); // Obtiene el tiempo actual en milisegundos
     if (currentTime - this.lastShotTime >= this.shootCooldown) {
       // Solo dispara si ha pasado el tiempo de cooldown
+
       this.shoots.push(
         new Shoot(
           this.ctx,
           new PositionComponent(
-            this.position.x + this.width - 10,
-            this.position.y + this.height / 2
+            this.position.x + this.width / 2 - 19.5, // Centrado en `x`, ajustado por el ancho del disparo (39)
+            this.position.y // Parte superior de la nave
           ),
-          new VelocityComponent(10, 0),
-
-          "/assets/images/laser-2.png"
+          new VelocityComponent(0, -10), // Movimiento hacia arriba
+          "/assets/images/plasm.png"
         )
       );
+
       this.lastShotTime = currentTime; // Actualiza el tiempo del último disparo
     }
   }
@@ -49,6 +50,8 @@ class Ship extends GameObject {
     this.velocity.vx *= 0.98; // Factor de fricción
     this.velocity.vy *= 0.98;
     this.velocity.update(this.position);
+
+    // Limita el movimiento de la nave al área del canvas
     if (this.position.x < 0) {
       this.position.x = 0;
     }
@@ -58,7 +61,6 @@ class Ship extends GameObject {
     if (this.position.y < 0) {
       this.position.y = 0;
     }
-
     if (this.position.y + this.height > this.ctx.canvas.height) {
       this.position.y = this.ctx.canvas.height - this.height;
     }
@@ -114,16 +116,6 @@ class Ship extends GameObject {
           this.maxSpeed
         );
         break;
-
-      case KEY_SHIFT: // Tecla Shift para dash
-        this.velocity.vx *= 2; // Duplica la velocidad en el eje X
-        this.velocity.vy *= 2; // Duplica la velocidad en el eje Y
-        setTimeout(() => {
-          // Después de un breve momento, vuelve la velocidad a la normalidad
-          this.velocity.vx /= 2;
-          this.velocity.vy /= 2;
-        }, 200); // Duración del dash en milisegundos
-        break;
     }
   }
 
@@ -170,8 +162,8 @@ class Ship extends GameObject {
         this.position.y + this.height > enemy.y
       ) {
         // Almacena la posición de la explosión y actívala
-        game.explosion.x = this.position.x + this.width - 35;
-        game.explosion.y = this.position.y - this.height + 20;
+        game.explosion.x = this.position.x;
+        game.explosion.y = this.position.y;
         game.explosion.explosionVisible = true;
         this.enemies.splice(index, 1);
         setTimeout(() => {

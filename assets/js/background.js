@@ -1,31 +1,31 @@
 class Background {
-    constructor(ctx) {
-      this.ctx = ctx;
-      this.x = 0;
+  constructor(ctx) {
+    this.ctx = ctx;
+    this.x = 0;
+    this.y = 0;
+    this.vx = 0;
+    this.vy = 1; // velocidad de desplazamiento hacia abajo
+
+    this.w = this.ctx.canvas.width;
+    this.h = this.ctx.canvas.height;
+    this.image = new Image();
+    this.image.src = "/assets/images/fondo-estrellas-azulado.png";
+  }
+
+  draw() {
+    // Dibuja la imagen principal
+    this.ctx.drawImage(this.image, this.x, this.y, this.w, this.h);
+    // Dibuja una copia de la imagen en la parte superior o inferior, según la dirección del movimiento
+    this.ctx.drawImage(this.image, this.x, this.y - this.h, this.w, this.h);
+  }
+
+  move() {
+    // Mueve el fondo hacia abajo
+    this.y += this.vy;
+
+    // Reinicia la posición cuando la imagen principal ha salido completamente de la pantalla
+    if (this.y >= this.h) {
       this.y = 0;
-      this.vx = -1;
-  
-      this.w = this.ctx.canvas.width;
-      this.h = this.ctx.canvas.height;
-      this.image = new Image();
-      this.image.src = "/assets/images/fantasy-landscape.jpg";
-       this.image.src = "/assets/images/Cielo_estrellado.jpg";
-    }
-  
-    draw() {
-      this.ctx.drawImage(this.image, this.x, this.y, this.w, this.h);
-  
-      this.ctx.drawImage(this.image, this.x + this.w, this.y, this.w, this.h);
-    }
-    
-    move() {
-      //move background
-      this.x += this.vx;
-  
-      //restart position if out of canvas
-      if (this.x + this.w <= 0) {
-        this.x = 0;
-      }
     }
   }
-  
+}

@@ -4,8 +4,8 @@ class PowerUp extends GameObject {
     this.ctx = ctx;
     // this.position.x = this.ctx.canvas.width - 50;
 
-    this.width = 87;
-    this.height = 87;
+    this.width = 30;
+    this.height = 30;
     // this.velocity.x = -1;
     const margin = 50; // Ajusta este valor según tus necesidades
     // this.position.y = Math.floor(
@@ -40,8 +40,8 @@ class PowerUp extends GameObject {
       this.position.x,
       this.position.y,
 
-      this.width / 3,
-      this.height / 3
+      this.width,
+      this.height
     );
     this.ctx.globalAlpha = 1; // Restaura la opacidad
   }

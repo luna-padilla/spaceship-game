@@ -8,6 +8,7 @@ class PlayerStats {
   reduceLives() {
     this.lives--;
   }
+  
   addLives() {
     this.lives++;
   }
@@ -15,10 +16,12 @@ class PlayerStats {
   addScore(points) {
     this.score += points;
   }
+
   restart() {
     this.lives = 3;
     this.score = 0;
   }
+
   isGameOver() {
     return this.lives <= 0;
   }
@@ -27,7 +30,6 @@ class PlayerStats {
     this.ctx.font = "10px 'Press Start 2P'";
     this.ctx.fillStyle = "white";
     this.ctx.fillText(`Score: ${this.score}`, 50, 20);
-    this.ctx.fillText(`Lives: ${this.lives}`, 140, 20);
+    this.ctx.fillText(`Lives: ${this.lives}`, 150, 20);
   }
-
 }

@@ -13,14 +13,14 @@ class PowerUp extends GameObject {
     // );
 
     this.img = new Image();
-    this.img.src = "/assets/images/bonus_life.png";
+    this.img.src = "assets/images/bonus_life.png";
     this.tick = 0;
     this.blinking = false;
     this.blinkingTimeout = 1000;
     this.timeoutId;
 
     this.powerupSound = new Audio(
-      "/assets/audio/Retro PowerUP 09.wav"
+      "assets/audio/Retro PowerUP 09.wav"
     );
     this.powerupSound.volume = 0.15;
   }

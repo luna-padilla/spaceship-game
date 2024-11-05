@@ -21,7 +21,7 @@ class Game {
       new VelocityComponent(-1, 0)
     );
 
-    this.audio = new Audio("/assets/audio/Space Heroes.ogg");
+    this.audio = new Audio("assets/audio/Space Heroes.ogg");
     this.audio.volume = 0.05;
     this.interval = null;
   }

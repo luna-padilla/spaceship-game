@@ -10,8 +10,8 @@ class Enemy {
 
     this.img = new Image();
     this.enemyImages = [
-      "/assets/images/insect-1.png",
-      "/assets/images/insect-2.png",
+      "assets/images/insect-1.png",
+      "assets/images/insect-2.png",
     ];
 
     this.img.src =

@@ -19,7 +19,7 @@ class Ship extends GameObject {
     this.invulnerableTimeout = 1000;
 
     this.spriteSheet = new Image();
-    this.spriteSheet.src = "/assets/images/nave.png";
+    this.spriteSheet.src = "assets/images/nave.png";
     this.spriteSheet.frames = 2;
     this.spriteSheet.frameIndex = 0;
 
@@ -29,7 +29,7 @@ class Ship extends GameObject {
     this.counterKilledEnemy = 0;
 
     this.shootSound = new Audio(
-      "/assets/audio/Retro Gun Laser SingleShot 01.wav"
+      "assets/audio/Retro Gun Laser SingleShot 01.wav"
     );
     this.shootSound.volume = 0.15;
   }
@@ -47,7 +47,7 @@ class Ship extends GameObject {
             this.position.y // Parte superior de la nave
           ),
           new VelocityComponent(0, -10), // Movimiento hacia arriba
-          "/assets/images/plasm.png"
+          "assets/images/plasm.png"
         )
       );
       // Reproduce el sonido de disparo

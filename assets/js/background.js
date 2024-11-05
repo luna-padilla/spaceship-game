@@ -9,7 +9,7 @@ class Background {
     this.w = this.ctx.canvas.width;
     this.h = this.ctx.canvas.height;
     this.image = new Image();
-    this.image.src = "/assets/images/fondo-estrellas-azulado.png";
+    this.image.src = "assets/images/fondo-estrellas-azulado.png";
   }
 
   draw() {

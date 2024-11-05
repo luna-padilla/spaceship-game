@@ -8,10 +8,10 @@ class Explosion {
     this.width = 15;
     this.height = 18;
     this.spriteSheet = new Image();
-    this.spriteSheet.src = "/assets/images/gradius.png";
+    this.spriteSheet.src = "assets/images/gradius.png";
 
     this.explosionSound = new Audio(
-      "/assets/audio/Retro Explosion Short 15.wav"
+      "assets/audio/Retro Explosion Short 15.wav"
     );
     this.explosionSound.volume = 0.15;
   }
